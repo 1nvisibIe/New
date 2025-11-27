@@ -11,6 +11,4 @@ Route::get('/home', [MyFirstController::class, 'index']);
 
 Route::get('/home/gg', [MyFirstController::class, 'index']);
 
-Route::get('/home/gg/g', [MyFirstController::class, 'index']);
 
-Route::get('/home/gg/g/g', [MyFirstController::class, 'index']);
