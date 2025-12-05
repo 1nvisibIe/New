@@ -59,7 +59,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="../../../../public/assets/admin/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                            <img src="{{asset('public/assets/admin/img/user1-128x128.jpg')}}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Brad Diesel
@@ -75,7 +75,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="../../../../public/assets/admin/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                            <img src="{{asset('public/assets/admin/img/user8-128x128.jpg')}}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     John Pierce
@@ -91,7 +91,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="../../../../public/assets/admin/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                            <img src="{{asset('public/assets/admin/img/user3-128x128.jpg')}}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Nora Silvester
@@ -147,7 +147,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="#" class="brand-link">
-            <img src="../../../../public/assets/admin/img/AdminLTELogo.png"
+            <img src="{{asset('public/assets/admin/img/AdminLTELogo.png')}}"
                  alt="AdminLTE Logo"
                  class="brand-image img-circle elevation-3"
                  style="opacity: .8">
@@ -159,7 +159,7 @@
             <!-- Sidebar user (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="../../../../public/assets/admin/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                    <img src="{{asset('public/assets/admin/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
                     <a href="#" class="d-block">Alexander Pierce</a>
@@ -212,19 +212,19 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="simple.html" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Simple Tables</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="data.html" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>DataTables</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="jsgrid.html" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>jsGrid</p>
                                 </a>
@@ -305,12 +305,15 @@
 </div>
 <!-- ./wrapper -->
 
-@vite(['resources/assets/admin/plugins/jquery/jquery.min.js',
-'resources/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js',
-'resources/assets/admin/js/adminlte.min.js',
-'resources/assets/admin/js/demo.js'])
 
 
+<script src="{{asset('assets/admin/js/jquery.min.js')}}"></script>
+
+<script src="{{asset('assets/admin/js/bootstrap.bundle.min.js')}}"></script>
+
+<script src="{{asset('assets/admin/js/adminlte.min.js')}}"></script>
+
+<script src="{{asset('assets/admin/js/demo.js')}}"></script>
 
 </body>
 </html>
