@@ -35,4 +35,4 @@ Route::fallback(function () {
 
 Route::resource('ProductCards', ProductCardsController::class);
 
-Route::get('/admin',[MainController::class,'index2']);
+Route::get('/admin',[MainController::class,'index2'])->name('admin');
