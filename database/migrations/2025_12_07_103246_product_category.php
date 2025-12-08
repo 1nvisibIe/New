@@ -12,14 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_category', function (Blueprint $table) {
-            $table->increments('id');
             $table->unsignedInteger('product_id');
-            $table->string('path', 170);
-            $table->smallInteger('sort_order')->default(0)->unsigned();
-            $table->boolean('is_main')->default(0);
+            $table->unsignedInteger('category_id');
+            $table->unique(['product_id', 'category_id']);
             $table->timestamps();
-
-            $table->index('product_id');
         });
     }
 
