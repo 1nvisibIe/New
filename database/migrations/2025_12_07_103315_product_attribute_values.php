@@ -12,14 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_attribute_values', function (Blueprint $table) {
-            $table->increments('id');
+
             $table->unsignedInteger('product_id');
-            $table->string('path', 170);
-            $table->smallInteger('sort_order')->default(0)->unsigned();
-            $table->boolean('is_main')->default(0);
+            $table->unsignedInteger('attribute_id');
+            $table->unsignedInteger('attribute_value_id')->nullable();
+            $table->string('custom_value', 170)->nullable();
+            $table->unsignedSmallInteger('sort_order')->default(0);
+
             $table->timestamps();
 
+            $table->unique(['product_id', 'attribute_id']);
             $table->index('product_id');
+            $table->index('attribute_id');
+            $table->index('attribute_value_id');
         });
     }
 
