@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\MyFirstController;
 use App\Http\Controllers\ProductCardsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,4 +36,9 @@ Route::fallback(function () {
 
 Route::resource('ProductCards', ProductCardsController::class);
 
-Route::get('/admin',[MainController::class,'index2'])->name('admin');
+
+Route::group(['prefix'=>'admin'],function(){
+    Route::get('/',[MainController::class,'index2'])->name('admin');
+
+    Route::resource('/Category',CategoryController::class);
+});
