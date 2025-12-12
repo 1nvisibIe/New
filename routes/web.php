@@ -40,5 +40,5 @@ Route::resource('ProductCards', ProductCardsController::class);
 Route::group(['prefix'=>'admin'],function(){
     Route::get('/',[MainController::class,'index2'])->name('admin');
 
-    Route::resource('/Category',CategoryController::class);
+    Route::resource('/categories',CategoryController::class);
 });

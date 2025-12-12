@@ -40,17 +40,17 @@
       CONTROL_SIDEBAR_ANIMATE: 'control-sidebar-animate',
       CONTROL_SIDEBAR_OPEN: 'control-sidebar-open',
       CONTROL_SIDEBAR_SLIDE: 'control-sidebar-slide-open',
-      LAYOUT_FIXED: 'layouts-fixed',
-      NAVBAR_FIXED: 'layouts-navbar-fixed',
-      NAVBAR_SM_FIXED: 'layouts-sm-navbar-fixed',
-      NAVBAR_MD_FIXED: 'layouts-md-navbar-fixed',
-      NAVBAR_LG_FIXED: 'layouts-lg-navbar-fixed',
-      NAVBAR_XL_FIXED: 'layouts-xl-navbar-fixed',
-      FOOTER_FIXED: 'layouts-footer-fixed',
-      FOOTER_SM_FIXED: 'layouts-sm-footer-fixed',
-      FOOTER_MD_FIXED: 'layouts-md-footer-fixed',
-      FOOTER_LG_FIXED: 'layouts-lg-footer-fixed',
-      FOOTER_XL_FIXED: 'layouts-xl-footer-fixed'
+      LAYOUT_FIXED: 'layout-fixed',
+      NAVBAR_FIXED: 'layout-navbar-fixed',
+      NAVBAR_SM_FIXED: 'layout-sm-navbar-fixed',
+      NAVBAR_MD_FIXED: 'layout-md-navbar-fixed',
+      NAVBAR_LG_FIXED: 'layout-lg-navbar-fixed',
+      NAVBAR_XL_FIXED: 'layout-xl-navbar-fixed',
+      FOOTER_FIXED: 'layout-footer-fixed',
+      FOOTER_SM_FIXED: 'layout-sm-footer-fixed',
+      FOOTER_MD_FIXED: 'layout-md-footer-fixed',
+      FOOTER_LG_FIXED: 'layout-lg-footer-fixed',
+      FOOTER_XL_FIXED: 'layout-xl-footer-fixed'
     };
     var Default = {
       controlsidebarSlide: true,
@@ -290,7 +290,7 @@
      * ====================================================
      */
     var NAME = 'Layout';
-    var DATA_KEY = 'lte.layouts';
+    var DATA_KEY = 'lte.layout';
     var JQUERY_NO_CONFLICT = $.fn[NAME];
     var Selector = {
       HEADER: '.main-header',
@@ -303,7 +303,7 @@
       CONTROL_SIDEBAR: '.control-sidebar',
       CONTROL_SIDEBAR_CONTENT: '.control-sidebar-content',
       CONTROL_SIDEBAR_BTN: '[data-widget="control-sidebar"]',
-      LAYOUT_FIXED: '.layouts-fixed',
+      LAYOUT_FIXED: '.layout-fixed',
       FOOTER: '.main-footer',
       PUSHMENU_BTN: '[data-widget="pushmenu"]',
       LOGIN_BOX: '.login-box',
@@ -314,9 +314,9 @@
       SIDEBAR: 'main-sidebar',
       CONTENT_FIXED: 'content-fixed',
       SIDEBAR_FOCUSED: 'sidebar-focused',
-      LAYOUT_FIXED: 'layouts-fixed',
-      NAVBAR_FIXED: 'layouts-navbar-fixed',
-      FOOTER_FIXED: 'layouts-footer-fixed',
+      LAYOUT_FIXED: 'layout-fixed',
+      NAVBAR_FIXED: 'layout-navbar-fixed',
+      FOOTER_FIXED: 'layout-footer-fixed',
       LOGIN_PAGE: 'login-page',
       REGISTER_PAGE: 'register-page',
       CONTROL_SIDEBAR_SLIDE_OPEN: 'control-sidebar-slide-open',
@@ -419,7 +419,7 @@
       _proto._init = function _init() {
         var _this = this;
 
-        // Activate layouts height watcher
+        // Activate layout height watcher
         this.fixLayoutHeight();
 
         if (this._config.loginRegisterAutoHeight === true) {
