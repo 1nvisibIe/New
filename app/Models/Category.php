@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
+
+
+Protected $fillable = ['name','slug'];
+
     public function children():HasMany
     {
         return $this->hasMany(Category::class, 'parent_id','id');
@@ -22,5 +26,12 @@ class Category extends Model
     public function products():BelongstoMany
     {
         return $this->belongsToMany(Product::class,'product_category','category_id','product_id');
+    }
+
+    public function attributes():BelongsToMany
+    {
+        return $this->belongsToMany(Attribute::class, 'category_attribute','category_id','attribute_id')
+            ->withPivot('sort_order')
+            ->orderBy('sort_order');
     }
 }

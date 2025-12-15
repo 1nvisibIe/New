@@ -17,4 +17,9 @@ class Attribute extends Model
     {
         return $this->belongsToMany(Product::class, 'product_attribute_values', 'attribute_id', 'product_id');
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_attribute', 'attribute_id','category_id');
+    }
 }

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('attribute_id');
             $table->unsignedInteger('attribute_value_id')->nullable();
-            $table->string('custom_value', 170)->nullable();
             $table->unsignedSmallInteger('sort_order')->default(0);
 
             $table->timestamps();

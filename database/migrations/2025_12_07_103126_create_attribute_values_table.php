@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('attribute_id');
             $table->string('value', 150);
             $table->char('color_hex', 7)->nullable();
-            $table->smallInteger('sort_order')->default(0)->unsigned();
+            $table->unsignedSmallInteger('sort_order')->default(0);
             $table->timestamps();
 
             $table->index('attribute_id');

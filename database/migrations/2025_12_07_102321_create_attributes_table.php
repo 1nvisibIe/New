@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('type', 50)->default('select');
             $table->string('unit', 30)->nullable();
             $table->boolean('is_filterable')->default(1);
-            $table->smallInteger('sort_order')->default(0)->unsigned();
+            $table->unsignedSmallInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }

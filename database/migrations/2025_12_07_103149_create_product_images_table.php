@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('product_id');
             $table->string('path', 170);
-            $table->smallInteger('sort_order')->default(0)->unsigned();
+            $table->unsignedSmallInteger('sort_order')->default(0);
             $table->boolean('is_main')->default(0);
             $table->timestamps();
 

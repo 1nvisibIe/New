@@ -15,6 +15,8 @@
     <!-- overlayScrollbars -->
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+
 </head>
 <body>
 <header>
@@ -148,7 +150,7 @@
         </nav>
         <!-- /.navbar -->
     </div>
-    >
+
 </header>
 <main class="hold-transition sidebar-mini">
     <!-- Main Sidebar Container -->
@@ -226,10 +228,30 @@
         </div>
         <!-- /.sidebar -->
     </aside>
+    <div class="content-wrapper">
 
+        <div class="row ">
+            <div class="col-12">
+            @if ($errors->any())
+                <div class="alert alert-danger ">
+                    <ul class="list-unstyled">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @if (session()->has('success'))
+                <div class="alert alert-success">
+                    {{session('success')}}
+                </div>
+            @endif
+            </div>
 
-@yield('content')
+    </div>
 
+        @yield('content')
+    </div>
 </main>
 <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
@@ -238,37 +260,47 @@
     <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
     reserved.
 </footer>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const currentUrl = window.location.href.replace(/\/$/, '');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentPath = window.location.pathname.replace(/\/$/, '');
 
-            document.querySelectorAll('.nav-sidebar a.nav-link').forEach(function (link) {
-                let href = link.getAttribute('href');
-                if (!href || href === '#') return;
+        document.querySelectorAll('.nav-sidebar a.nav-link').forEach(function (link) {
+            let href = link.getAttribute('href');
+            if (!href || href === '#') return;
 
-                href = href.replace(/\/$/, '');
+            // Извлекаем pathname из полного URL
+            let linkPath;
+            try {
+                const url = new URL(href, window.location.origin);
+                linkPath = url.pathname.replace(/\/$/, '');
+            } catch (e) {
+                linkPath = href.split('?')[0].replace(/\/$/, '');
+            }
 
-                // точное совпадение ссылки
-                if (href === currentUrl) {
-                    link.classList.add('active');
+            if (linkPath === currentPath) {
+                link.classList.add('active');
 
-                    // если ссылка внутри дерева, подсвечиваем родителя
-                    const treeItem = link.closest('.has-treeview');
-                    if (treeItem) {
-                        treeItem.classList.add('menu-open');
-                        const parentLink = treeItem.querySelector('> a.nav-link');
-                        if (parentLink) {
-                            parentLink.classList.add('active');
-                        }
+                // ИСПРАВЛЕНО: правильный селектор для родителя
+                const treeItem = link.closest('.has-treeview');
+                if (treeItem) {
+                    treeItem.classList.add('menu-open');
+                    // :scope > a.nav-link вместо > a.nav-link
+                    const parentLink = treeItem.querySelector(':scope > a.nav-link');
+                    if (parentLink) {
+                        parentLink.classList.add('active');
                     }
                 }
-            });
+            }
         });
+    });
+</script>
 
-    </script>
 
 
-    <script src="{{asset('assets/admin/js/jquery.min.js')}}"></script>
+
+
+
+<script src="{{asset('assets/admin/js/jquery.min.js')}}"></script>
 
     <script src="{{asset('assets/admin/js/bootstrap.bundle.min.js')}}"></script>
 

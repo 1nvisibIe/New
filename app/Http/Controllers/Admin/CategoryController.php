@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -12,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = [1];
+        $categories = Category::paginate(3);
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -21,7 +23,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.categories.create');
     }
 
     /**
@@ -29,12 +31,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate(['name'=>'required']);
 
-    /**
-     * Display the specified resource.
-     */
+        Category::create([
+            'name'=>$request->name,
+            'slug' => Str::slug($request->name,'-'),
+
+        ]);
+        $request->session()->flash('success','Категория добавлена');
+        return redirect()->route('categories.index');
+    }
 
 
 
