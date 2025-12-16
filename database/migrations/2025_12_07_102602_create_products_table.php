@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('sku', 100)->unique();
             $table->string('name', 170);
             $table->string('slug', 170)->unique();
-            $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('price', 12, 2);
             $table->decimal('old_price', 12, 2)->nullable();
@@ -24,7 +23,7 @@ return new class extends Migration
             $table->unsignedInteger('brand_id')->nullable();
             $table->boolean('is_active')->default(1);
             $table->integer('views')->default(0)->unsigned();
-            $table->json('meta')->nullable();
+
             $table->timestamps();
 
             $table->index('brand_id');

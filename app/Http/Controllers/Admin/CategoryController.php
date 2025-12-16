@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(3);
+        $categories = Category::with('parent')->orderBy('id')->paginate(3);
+
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -35,7 +36,7 @@ class CategoryController extends Controller
 
         Category::create([
             'name'=>$request->name,
-            'slug' => Str::slug($request->name,'-'),
+            'slug' => Str::slug($request->name,'-')
 
         ]);
         $request->session()->flash('success','Категория добавлена');
@@ -46,7 +47,8 @@ class CategoryController extends Controller
 
     public function edit(string $id)
     {
-        //
+       $category = Category::find($id);
+       return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -54,7 +56,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate(['name'=>'required']);
+        $category = Category::find($id);
+        $category->update([
+            'name'=>$request->name,
+            'slug' => Str::slug($request->name,'-')
+        ]);
+        return redirect()->route('categories.index')->with('success','Изменения сохранены');
     }
 
     /**
@@ -62,6 +70,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::find($id);
+        $nazvanie = $category->name;
+        $category->delete();
+        return redirect()->route('categories.index')->with('success','Категория '. "$nazvanie" .' удалена');
     }
 }

@@ -1,9 +1,9 @@
 @extends('admin.layouts.layout')
 @section('title')
-    Категории
+    Товары
 @endsection
 @section('h1')
-    Категории
+    Товары
 @endsection
 @section('content')
 
@@ -32,38 +32,48 @@
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Список категорий</h3>
+                    <h3 class="card-title">Список Товаров</h3>
 
                 </div>
                 <div class="card-body">
-                    <a href="{{route('categories.create')}}" class="btn btn-primary mb-3">
-                        Добавить категорию
+                    <a href="{{route('products.create')}}" class="btn btn-primary mb-3">
+                        Добавить товар
                     </a>
-                    @if(!empty($categories))
+                    @if(!empty($products))
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover text-nowrap">
                                 <thead>
                                 <tr>
                                     <th style="width: 30px">#</th>
+                                    <th>SKU</th>
                                     <th>Наименование</th>
                                     <th>Slug</th>
-                                    <th>Родитель</th>
+                                    <th>Цена</th>
+                                    <th>Старая цена</th>
+                                    <th>Наличие</th>
+                                    <th>Актуальность</th>
+                                    <th>Описание</th>
                                     <th>Actions</th>
 
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($categories as $category)
+                                @foreach($products as $product)
 
                                 <tr>
-                                    <td>{{$category->id}}</td>
-                                    <td>{{$category->name}}</td>
-                                    <td>{{$category->slug}}</td>
-                                    <td>{{ $category->parent?->name ?? ($category->parent_id ? 'Не найдена' : 'Корневая') }}</td>
-                                    <td><a href="{{route('categories.edit',['category' => $category->id])}}" class="btn btn-info btn-sm float-left mr-1">
+                                    <td>{{$product->id}}</td>
+                                    <td>{{$product->sku}}</td>
+                                    <td>{{$product->name}}</td>
+                                    <td>{{$product->slug}}</td>
+                                    <td>{{$product->price}}</td>
+                                    <td>{{$product->old_price}}</td>
+                                    <td>{{$product->stock}}</td>
+                                    <td>{{$product->is_active}}</td>
+                                    <td>{{$product->description}}</td>
+                                    <td><a href="{{route('products.edit',['product' => $product->id])}}" class="btn btn-info btn-sm float-left mr-1">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
-                                    <form action="{{route('categories.destroy',['category' => $category->id])}}" method="post" class="float-left">
+                                    <form action="{{route('products.destroy',['product' => $product->id])}}" method="post" class="float-left">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm"
@@ -80,14 +90,14 @@
                             </table>
                         </div>
                             @else
-                                <p>Категорий пока нет...</p>
+                                <p>Товаров пока нет...</p>
                             @endif
 
                         </div>
 
                         <!-- /.card-body -->
                 <div class="card-footer">
-                    {{ $categories->links('pagination::bootstrap-4') }}
+                    {{ $products->links('pagination::bootstrap-4') }}
 
                 </div>
 

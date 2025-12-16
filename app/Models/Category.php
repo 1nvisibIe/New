@@ -11,7 +11,7 @@ class Category extends Model
 {
 
 
-Protected $fillable = ['name','slug'];
+Protected $fillable = ['name','slug','parent_id'];
 
     public function children():HasMany
     {
