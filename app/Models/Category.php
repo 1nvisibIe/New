@@ -23,9 +23,9 @@ Protected $fillable = ['name','slug','parent_id'];
         return $this->belongsTo(Category::class, 'parent_id','id');
     }
 
-    public function products():BelongstoMany
+    public function products():HasMany
     {
-        return $this->belongsToMany(Product::class,'product_category','category_id','product_id');
+        return $this->HasMany(Product::class,'category_id','id');
     }
 
     public function attributes():BelongsToMany

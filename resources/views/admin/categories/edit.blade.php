@@ -40,7 +40,21 @@
 
                     <div class="form-group">
                         <label for="name">Название</label>
-                        <input type="text" name="name" class="form-control @error('name')is-invalid  @enderror"  id="name" value={{$category->name}}>
+                        <input type="text" name="name" class="form-control mb-3 @error('name')is-invalid  @enderror"  id="name" value={{$category->name}}>
+
+                        <label for="parent">Родительская категория</label>
+                        <select class=" form-control" name="parent" id="parent">
+
+                            @foreach($categories as $cat)
+                                @if($category->id!=$cat->id)
+                                    <option value="{{$cat->id}}" {{ $category->parent_id == $cat->id ? 'selected' : '' }}>
+                                        {{$cat->name}}</option>
+
+                                @endif
+                            @endforeach
+                                <option value=""{{ Empty($category->parent_id) ? 'selected' : '' }}>Нет</option>
+
+                        </select>
                     </div>
 
 

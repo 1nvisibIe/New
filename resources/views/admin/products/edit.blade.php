@@ -30,7 +30,7 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Категория  {{$products->name}}</h3>
+                <h3 class="card-title">Товар  {{$products->name}}</h3>
 
             </div>
             <form role="form" action="{{route('products.update',['product' => $products->id])}}" method="post">
@@ -39,20 +39,27 @@
                 <div class="card-body">
 
                     <div class="form-group">
-                        <label for="name">SKU</label>
+                        <label for="sku">SKU</label>
                         <input type="text" name="sku" class="form-control @error('sku')is-invalid  @enderror"  id="sku" value={{$products->sku}}>
                         <label for="name">Наименование</label>
                         <input type="text" name="name" class="form-control @error('name')is-invalid  @enderror"  id="name" value={{$products->name}}>
-                        <label for="name">Цена</label>
-                        <input type="text" name="price" class="form-control @error('price')is-invalid  @enderror"  id="price" value={{$products->price}}>
-                        <label for="name">Старая цена</label>
-                        <input type="text" name="old_price" class="form-control @error('old_price')is-invalid  @enderror"  id="old_price" value={{$products->old_price}}>
-                        <label for="name">Наличие</label>
+                        <label for="stock">Наличие</label>
                         <input type="text" name="stock" class="form-control @error('stock')is-invalid  @enderror"  id="stock" value={{$products->stock}}>
-                        <label for="name">Актуальность</label>
-                        <input type="text" name="is_active" class="form-control @error('is_active')is-invalid  @enderror"  id="is_active" value={{$products->is_active}}>
-                        <label for="name">Описание</label>
-                        <input type="text" name="description" class="form-control @error('description')is-invalid  @enderror"  id="description" value={{$products->description}}>
+                        <label for="category">Категория</label>
+                        <select class=" form-control" name="category" id="category">
+
+                            @foreach($categories as $cat)
+
+                                    <option value="{{$cat->id}}" {{ $products->category == $cat->id ? 'selected' : '' }}>
+                                        {{$cat->name}}</option>
+
+                            @endforeach
+                            <option value=""{{ Empty($products->category) ? 'selected' : '' }}>Нет</option>
+
+                        </select>
+                        <label for="price">Себестоимость</label>
+                        <input type="text" name="price" class="form-control @error('price')is-invalid  @enderror"  id="price" value={{$products->price}}>
+
                     </div>
 
 

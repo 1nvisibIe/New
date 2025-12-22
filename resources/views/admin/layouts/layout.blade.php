@@ -24,6 +24,10 @@
     <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+
+
+
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -196,6 +200,33 @@
                     </li>
 
                     <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link {{ request()->routeIs('cards.*') ? 'active' : '' }}">
+
+
+                            <i class="nav-icon fas fa-dollar-sign"></i>
+                            <p>
+                                Карточки
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{route('cards.index')}}" class="nav-link ">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Список карточек</p>
+                                </a>
+                            </li>
+                            <li class="nav-item ">
+                                <a href="{{route('cards.create')}}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Новая карточка</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item has-treeview">
                         <a href="#" class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
 
 
@@ -227,7 +258,7 @@
                         <a href="#" class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
 
 
-                            <i class="nav-icon fas fa-archive"></i>
+                            <i class="nav-icon fas fa-edit"></i>
                             <p>
                                 Товары
                                 <i class="fas fa-angle-left right"></i>

@@ -30,7 +30,7 @@
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Создание категорий</h3>
+                    <h3 class="card-title">Создание товара</h3>
 
                 </div>
                 <form role="form" action="{{route('products.store')}}" method="post">
@@ -38,20 +38,26 @@
                     <div class="card-body">
 
                         <div class="form-group">
-                            <label for="name">SKU</label>
+                            <label for="sku">SKU</label>
                             <input type="text" name="sku" class="form-control @error('sku')is-invalid  @enderror"  id="sku" placeholder="sku">
                             <label for="name">Наименование</label>
                             <input type="text" name="name" class="form-control @error('name')is-invalid  @enderror"  id="name" placeholder="Наименование">
-                            <label for="name">Цена</label>
-                            <input type="text" name="price" class="form-control @error('price')is-invalid  @enderror"  id="price" placeholder="Цена">
-                            <label for="name">Старая цена</label>
-                            <input type="text" name="old_price" class="form-control @error('old_price')is-invalid  @enderror"  id="old_price" placeholder="Старая цена">
-                            <label for="name">Наличие</label>
+                            <label for="stock">Наличие</label>
                             <input type="text" name="stock" class="form-control @error('stock')is-invalid  @enderror"  id="stock" placeholder="Наличие">
-                            <label for="name">Актуальность</label>
-                            <input type="text" name="is_active" class="form-control @error('is_active')is-invalid  @enderror"  id="is_active" placeholder="Актуальность">
-                            <label for="name">Описание</label>
-                            <input type="text" name="description" class="form-control @error('description')is-invalid  @enderror"  id="is_active" placeholder="Описание">
+                            <label for="category">Категория</label>
+                            <select class=" form-control" name="category" id="category" >
+                                <option value="">— Выберите категорию —</option>
+                                @foreach($categories as $cat)
+
+                                    <option value="{{$cat->id}}" >{{$cat->name}}</option>
+
+                                @endforeach
+                                <option value="">Нет</option>
+                            </select>
+
+                            <label for="price">Себестоимость</label>
+                            <input type="text" name="price" class="form-control @error('price')is-invalid  @enderror"  id="price" placeholder="Себестоимость">
+
                         </div>
 
 

@@ -42,7 +42,17 @@
                             <input type="text" name="name" class="form-control @error('name')is-invalid  @enderror"  id="name" placeholder="Название">
                         </div>
 
+                        <label for="parent">Родительская категория</label>
+                        <select class=" form-control" name="parent" id="parent">
+                            <option value="">— Выберите категорию —</option>
+                            @foreach($categories as $cat)
 
+                                <option value="{{$cat->id}}" >{{$cat->name}}</option>
+
+                            @endforeach
+                            <option value="">Нет</option>
+
+                        </select>
                     </div>
 
                 <div class="card-footer">

@@ -24,7 +24,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        $categories = Category::all();
+
+        return view('admin.categories.create', compact('categories'));
+
     }
 
     /**
@@ -47,8 +50,9 @@ class CategoryController extends Controller
 
     public function edit(string $id)
     {
+       $categories = Category::all();
        $category = Category::find($id);
-       return view('admin.categories.edit', compact('category'));
+       return view('admin.categories.edit', compact('category','categories'));
     }
 
     /**
@@ -60,7 +64,8 @@ class CategoryController extends Controller
         $category = Category::find($id);
         $category->update([
             'name'=>$request->name,
-            'slug' => Str::slug($request->name,'-')
+            'slug' => Str::slug($request->name,'-'),
+            'parent_id'=>$request->parent
         ]);
         return redirect()->route('categories.index')->with('success','Изменения сохранены');
     }

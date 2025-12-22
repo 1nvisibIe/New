@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,7 +25,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create');
+        $categories = Category::all();
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
@@ -33,7 +35,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate(['sku'=>'required','name'=>'required','price'=>'required'
-            ,'stock'=>'required','is_active'=>'required']);
+            ,'stock'=>'required']);
 
         Product::create([
             'sku'=>$request->sku,
@@ -41,7 +43,8 @@ class ProductController extends Controller
             'name'=>$request->name,
             'price'=>$request->price,
             'stock'=>$request->stock,
-            'is_active'=>$request->is_active
+            'category_id'=>$request->category
+
 
 
         ]);
@@ -54,7 +57,8 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $products = Product::find($id);
-        return view('admin.products.edit', compact('products'));
+        $categories = Category::all();
+        return view('admin.products.edit', compact('products','categories'));
     }
 
     /**
@@ -63,14 +67,14 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate(['sku'=>'required','name'=>'required','price'=>'required'
-            ,'stock'=>'required','is_active'=>'required']);
+            ,'stock'=>'required']);
         $products = Product::find($id);
         $products->update([
             'sku'=>$request->sku,
             'name'=>$request->name,
             'price'=>$request->price,
             'stock'=>$request->stock,
-            'is_active'=>$request->is_active,
+            'category_id'=>$request->category,
             'slug' => Str::slug($request->name,'-')
         ]);
         return redirect()->route('products.index')->with('success','Изменения сохранены');

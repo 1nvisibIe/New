@@ -48,11 +48,10 @@
                                     <th>SKU</th>
                                     <th>Наименование</th>
                                     <th>Slug</th>
-                                    <th>Цена</th>
-                                    <th>Старая цена</th>
+                                    <th>Категория</th>
                                     <th>Наличие</th>
-                                    <th>Актуальность</th>
-                                    <th>Описание</th>
+                                    <th>Себестоимость</th>
+
                                     <th>Actions</th>
 
                                 </tr>
@@ -65,11 +64,10 @@
                                     <td>{{$product->sku}}</td>
                                     <td>{{$product->name}}</td>
                                     <td>{{$product->slug}}</td>
-                                    <td>{{$product->price}}</td>
-                                    <td>{{$product->old_price}}</td>
+                                    <td>{{ $product->category?->name ?? ($product->category ? 'Не найдена' : 'Нет категории') }}</td>
                                     <td>{{$product->stock}}</td>
-                                    <td>{{$product->is_active}}</td>
-                                    <td>{{$product->description}}</td>
+                                    <td>{{$product->price}}</td>
+
                                     <td><a href="{{route('products.edit',['product' => $product->id])}}" class="btn btn-info btn-sm float-left mr-1">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>

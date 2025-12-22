@@ -10,19 +10,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
 class Product extends Model
-{   protected $fillable = ['sku','name','slug','description','price','stock','is_active'];
+{   protected $fillable = ['sku','name','slug','description','price','stock','is_active','category_id'];
     public function brand():BelongsTo{
         return $this->BelongsTo(Brand::class,'brand_id','id');
     }
 
-    public function category(): BelongsToMany
+    public function category(): BelongsTo
     {
-        return $this->BelongsToMany(Category::class,'product_category','product_id','category_id');
+        return $this->BelongsTo(Category::class,'category_id','id');
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(ProductImage::class,'product_id','id')->orderBy('sort_order');
+        return $this->hasMany(ProductImage::class,'product_id','id');
     }
 
     public function mainImage(): HasOne
@@ -32,9 +32,7 @@ class Product extends Model
 
     public function attributes():BelongsToMany
     {
-        return $this->belongsToMany(Attribute::class, 'product_attribute_values', 'product_id', 'attribute_id')
-            ->withPivot('attribute_value_id', 'custom_value')
-            ->orderBy('sort_order');
+        return $this->belongsToMany(Attribute::class, 'product_attribute_values', 'product_id', 'attribute_id');
     }
 
     public function attributeValues():BelongsToMany
@@ -42,4 +40,13 @@ class Product extends Model
         return $this->belongsToMany(AttributeValue::class, 'product_attribute_values', 'product_id', 'attribute_value_id');
     }
 
+    public function card(): HasOne
+    {
+        return $this->hasOne(Card::class,'product_id','id');
+    }
+    public function getimage()
+    {return $this->mainImage?->path
+        ? asset("uploads/{$this->mainImage->path}")
+        : asset('default.jpg');
+    }
 }
