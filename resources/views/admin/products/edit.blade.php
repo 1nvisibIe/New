@@ -40,17 +40,17 @@
 
                     <div class="form-group">
                         <label for="sku">SKU</label>
-                        <input type="text" name="sku" class="form-control @error('sku')is-invalid  @enderror"  id="sku" value={{$products->sku}}>
+                        <input type="text" name="sku" class="form-control @error('sku')is-invalid  @enderror"  id="sku" value="{{$products->sku}}">
                         <label for="name">Наименование</label>
-                        <input type="text" name="name" class="form-control @error('name')is-invalid  @enderror"  id="name" value={{$products->name}}>
+                        <input type="text" name="name" class="form-control @error('name')is-invalid  @enderror"  id="name" value="{{$products->name}}">
                         <label for="stock">Наличие</label>
-                        <input type="text" name="stock" class="form-control @error('stock')is-invalid  @enderror"  id="stock" value={{$products->stock}}>
+                        <input type="text" name="stock" class="form-control @error('stock')is-invalid  @enderror"  id="stock" value="{{$products->stock}}">
                         <label for="category">Категория</label>
                         <select class=" form-control" name="category" id="category">
 
                             @foreach($categories as $cat)
 
-                                    <option value="{{$cat->id}}" {{ $products->category == $cat->id ? 'selected' : '' }}>
+                                    <option value="{{$cat->id}}" {{ $products->category->id == $cat->id ? 'selected' : '' }}>
                                         {{$cat->name}}</option>
 
                             @endforeach

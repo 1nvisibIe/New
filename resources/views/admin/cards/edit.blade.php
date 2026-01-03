@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                             <div class="mt-3 ">
-                                <img src="{{$product->getimage()}}" style="width: 200px; height: 200px; object-fit: cover; border-radius:15px" >
+                                <img src="{{$product->getimage()}}" style="width: 250px; height: 175px; object-fit: cover; border-radius:15px" >
                             </div>
                         </div>
                         <label for="description">Описание</label>

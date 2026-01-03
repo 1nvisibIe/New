@@ -1,0 +1,249 @@
+.zelen {
+    text-decoration: none;
+    color:#000000;
+    font-weight:700;
+}
+.zelen:hover {
+    color: #45a159;
+}
+
+
+.navbar-nav .nav-link.zelen.active {
+    color: #45a159;
+}
+.photo-fixed {
+    width: 247px;
+    height: 165px;
+    object-fit: cover; /* Обрезает избыток, сохраняя пропорции */
+    object-position: center; /* Центрирует изображение */
+}
+
+.btn{
+    color: #45a159;
+    border-color:#45a159;
+    font-weight:700;
+}
+.btn:hover {
+    color: #ffffff;
+    background-color: #45a159;
+    border-color: #45a159;
+}
+.bg-body{
+    background-image: url(../../uploads/images/client/fon.png);
+    background-color: #F1F1F1;
+}
+body {
+    font-family: "Open Sans", sans-serif;
+    background-image: url(../../uploads/images/client/fon2.png);
+    background-color: #F1F1F1;
+}
+.tex a{
+    text-decoration:none;
+    color:#ffffff;
+}
+.container{
+    max-width:1140px;
+}
+
+
+@media (min-width: 768px) and (max-width: 1900px) {
+    .gran {
+        padding-left: 35px;
+    }
+
+}
+
+.navbar-brand {
+    margin: 0;
+    padding: 0;
+}
+.colorVK {
+    color:#000000;
+}
+.colorTG {
+    color:#000000;
+}
+
+.colorVK:hover{
+    color:#0077FF;
+
+}
+.colorTG:hover{
+    color:#1c93e3;
+
+}
+.colorVK2 {
+    color:#ffffff;
+}
+.colorVK2:hover{
+    color:#0077FF;
+
+}
+.colorTG2 {
+    color:#ffffff;
+}
+.colorTG2:hover{
+    color:#1c93e3;
+
+}
+.razmerzag{
+    font-size:xx-large;
+    font-weight:600;
+}
+
+h1{
+    color: #45a159;
+    font-family: "Playpen Sans", cursive;
+}
+.razmeriimg{
+    max-width:500px;
+    max-height:90%;
+    width:100%;
+}
+.razmerikaryseli{
+
+    max-width:800px;
+
+}
+
+.shrift{
+    color: #45a159;
+    font-family: "Playpen Sans", cursive;
+    font-size:xx-large;
+    font-weight:600;
+    margin:0;
+}
+
+
+.card {
+    border-radius: 15px;
+}
+
+@media (min-width: 1px) and (max-width: 575px) {
+
+    .padmin{
+        padding-top:11px !important;
+        padding-bottom:11px !important;
+        padding-left:14px !important;
+        padding-right:14px !important;
+    }
+
+
+
+}
+@media (min-width: 576px) and (max-width: 767px) {
+
+    .padmin{
+        padding:10px;
+    }
+
+}
+@media (min-width: 1px) and (max-width: 767px) {
+    .gran2 {
+        text-align: center;
+    }
+
+    .shrift{
+        font-size:x-large;
+    }
+
+    .razmerikompvkataloge{
+
+        display: block !important;
+        content: center !important;
+        margin:  auto !important;
+    }
+
+    .paddiv{
+        padding-right:16px !important;
+    }
+
+}
+
+ a.hleb {
+    text-decoration: none ;
+    color:#000000 ;
+    font-weight:500 ;
+}
+ a.hleb:hover {
+    color: #45a159;
+}
+.hleb2.active {
+    color: #45a159 ;
+}
+.spanprobel {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.shrifthleba {
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.breadcrumb {
+    margin-bottom: 5px;
+}
+
+.razmerikompvkataloge{
+    max-width:400px;
+    width:100%;
+
+}
+
+.zacherknyt{
+    text-decoration: line-through;
+}
+
+.soskidkoy{
+    color:#000000;
+    font-size:32px;
+    font-weight:700;
+    line-height: 1;
+}
+
+.bezskidki{
+    color:#8C8C8C;
+    font-size:18px;
+    font-weight:500;
+    text-decoration: line-through;
+    line-height: 1;
+}
+.bezskidki + .soskidkoy {
+    color: #dc3545;
+}
+
+
+.soskidkoyCartochka{
+    color:#000000;
+    font-size:20px;
+    font-weight:700;
+    line-height: 1;
+}
+.bezskidkiCartochka{
+    color:#8C8C8C;
+    font-size:14px;
+    font-weight:500;
+    text-decoration: line-through;
+    line-height: 1;
+}
+.bezskidkiCartochka + .soskidkoyCartochka {
+    color: #dc3545;
+}
+
+.razmerikarti{
+
+    max-width:650px;
+
+}
+
+.btn2{
+    color: #000000 ;
+    border-color:#CFCFCF;
+    background-color: #CFCFCF ;
+    font-weight:700 ;
+}
+.btn2:hover {
+    color: #ffffff ;
+    background-color: #D53032 ;
+    border-color: #D53032 ;
+}

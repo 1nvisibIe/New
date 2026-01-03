@@ -17,7 +17,7 @@ class CardController extends Controller
      */
     public function index()
     {
-        $cards = Card::with('product')->orderBy('id')->paginate(3);
+        $cards = Card::with('product')->orderBy('id','desc')->paginate(3);
 
         return view('admin.cards.index', compact('cards'));
     }

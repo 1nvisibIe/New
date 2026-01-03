@@ -3,7 +3,7 @@
     Новая карточка
 @endsection
 @section('h1')
-    Новыая карточка
+    Новая карточка
 @endsection
 @section('content')
 

@@ -73,7 +73,7 @@
                                     </td>
                                     <td class="text-center">{{Str::limit($card->product->mainImage?->path ?? ($card->product->mainImage ? 'Не найдена' : 'Нет главного изображения'),32,'...')}}
                                         <div class="mt-1 d-flex justify-content-center">
-                                            <img src="{{$card->product->getimage()}}" style="width: 50px; height: 50px; object-fit: cover; border-radius:5px" >
+                                            <img src="{{$card->product->getimage()}}" style="width: 75px; height: 50px; object-fit: cover; border-radius:5px" >
                                         </div>
                                     </td>
                                     <td>{{$card->description}}</td>

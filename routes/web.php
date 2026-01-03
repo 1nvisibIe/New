@@ -4,13 +4,18 @@ use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CardController;
 
+use App\Http\Controllers\Client\MainClientController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
 
-Route::get('/', function () {
-    return view('welcome');}
+Route::get('/', [MainClientController::class,'index']
 )->name('Home');
+
+Route::get('/catalog', [MainClientController::class,'catalog'])->name('Catalog');
+
+Route::get('/catalog/{slug}', [MainClientController::class,'show'])->name('Catalog.single');
+
 
 
 Route::match(['GET', 'POST'], '/contact', function () {
@@ -32,7 +37,7 @@ Route::match(['GET', 'POST'], '/contact', function () {
 //Route::redirect('/contact', '/HomePage',301);
 
 Route::fallback(function () {
-    return redirect()->route('HomePage');
+    return redirect()->route('Home');
 });
 
 
@@ -50,3 +55,5 @@ Route::post('/register',[UserController::class,'store'])->name('register.store')
 Route::get('/login',[UserController::class,'loginForm'])->name('login.create');
 Route::post('/login',[UserController::class,'login'])->name('login');
 Route::get('/logout',[UserController::class,'logout'])->name('logout');
+
+
