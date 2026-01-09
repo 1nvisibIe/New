@@ -70,7 +70,7 @@
 
 
 
-            <a href="#" class="text-center">Register an account</a>
+            <a href="{{route('register.create')}}" class="text-center">Register an account</a>
         </div>
         <!-- /.form-box -->
     </div><!-- /.card -->

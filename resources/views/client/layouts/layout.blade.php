@@ -55,9 +55,16 @@
                 </ul>
 
 
-                <form class="d-flex justify-content-end" role="search">
-                    <input class="form-control me-2 ms-0 w-90" type="search" placeholder="Поиск" aria-label="Поиск">
+                <form class="d-flex justify-content-end" role="search" action="{{route('Search')}}">
+                    <input class="form-control me-2 ms-0 w-90" type="search" name="s" placeholder="Поиск" aria-label="Поиск">
                     <button class="btn " type="submit">Поиск</button>
+                </form>
+                <form action="{{ route('logout') }}" method="POST" class="d-inline ms-1" onsubmit="return confirm('Вы действительно хотите выйти?');">
+                    @csrf
+
+                    <button type="submit" class="btn " title="Выйти из аккаунта" >
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
                 </form>
             </div>
         </div>

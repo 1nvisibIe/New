@@ -79,7 +79,7 @@
 
 
 
-            <a href="#" class="text-center">I already have a membership</a>
+            <a href="{{route('login.create')}}" class="text-center">I already have a membership</a>
         </div>
         <!-- /.form-box -->
     </div><!-- /.card -->
