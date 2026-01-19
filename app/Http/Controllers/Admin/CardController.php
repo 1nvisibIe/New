@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Card;
+use App\Models\CardView;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -129,6 +131,35 @@ class CardController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    public function rate(Request $request, $slug)
+    {
+        $product = Product::where('slug', $slug)->firstOrFail();
+        $cardid = $product->card->id;
+
+        $request->validate([
+            'rating' => 'nullable|integer|min:1|max:10',
+        ]);
+
+        $card = Card::findOrFail($cardid);
+
+        $rating = $request->rating;
+
+        CardView::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'card_id' => $card->id,
+            ],
+            [
+                'rating' => $rating,
+                'viewed_at' => now(),
+            ]
+        );
+
+        return redirect()->route('recommendation')->with('success', 'Оценка сохранена!');
+    }
+
+    // ... другие методы, если есть (show и т.д.)
+
     public function destroy(string $id)
     {
         $cards = Card::find($id);

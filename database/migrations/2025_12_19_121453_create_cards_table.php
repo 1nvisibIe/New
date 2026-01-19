@@ -15,6 +15,10 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('product_id');
             $table->string('name', 170);
+            $table->year('release_year')->nullable();
+            $table->string('director', 100)->nullable();
+            $table->string('genres', 170)->nullable();
+            $table->decimal('imdb_rating', 3, 1)->nullable();
             $table->unsignedInteger('views')->default(0);
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(1);

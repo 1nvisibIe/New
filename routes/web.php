@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CardController;
 
 use App\Http\Controllers\Client\MainClientController;
 use App\Http\Controllers\Client\SearchController;
+use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
@@ -14,8 +15,15 @@ Route::get('/', [MainClientController::class,'index']
 )->name('Home');
 
 Route::get('/catalog', [MainClientController::class,'catalog'])->name('Catalog');
+Route::get('/recommendation', [RecommendationController::class,'index'])->name('recommendation');
+
+Route::post('/recommendations/reset', [RecommendationController::class, 'resetHistory'])
+    ->name('recommendations.reset')
+    ->middleware('auth');  // только для авторизованных
 
 Route::get('/catalog/{slug}', [MainClientController::class,'show'])->name('Catalog.single');
+
+Route::post('/cards/{slug}/rate', [CardController::class, 'rate'])->name('cards.rate')->middleware('auth');
 
 Route::get('/search', [SearchController::class,'index'])->name('Search');
 

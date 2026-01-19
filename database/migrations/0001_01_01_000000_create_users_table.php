@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->tinyInteger('is_admin')->default(0);
+            $table->json('preferences')->nullable();
             $table->timestamps();
         });
 

@@ -37,18 +37,18 @@
                                     <div class="flex-grow-1">
                                         <p class="card-title">{{$card->name}}</p>
                                     </div>
-                                    @if(!empty($card->old_price))
-                                        <div class="d-flex flex-column align-items-start">
+{{--                                    @if(!empty($card->old_price))--}}
+{{--                                        <div class="d-flex flex-column align-items-start">--}}
 
-                                            <p class="card-body p-0 m-0 bezskidkiCartochka">{{$card->old_price}} ₽</p>
-                                            <p class=" card-body p-0 m-0 soskidkoyCartochka "> {{$card->price}} ₽</p>
-                                        </div>
-                                    @else
-                                        <div class="d-flex flex-column align-items-start">
+{{--                                            <p class="card-body p-0 m-0 bezskidkiCartochka">{{$card->old_price}} ₽</p>--}}
+{{--                                            <p class=" card-body p-0 m-0 soskidkoyCartochka "> {{$card->price}} ₽</p>--}}
+{{--                                        </div>--}}
+{{--                                    @else--}}
+{{--                                        <div class="d-flex flex-column align-items-start">--}}
 
-                                            <p class=" card-body p-0 m-0 soskidkoyCartochka "> {{$card->price}} ₽</p>
-                                        </div>
-                                    @endif
+{{--                                            <p class=" card-body p-0 m-0 soskidkoyCartochka "> {{$card->price}} ₽</p>--}}
+{{--                                        </div>--}}
+{{--                                    @endif--}}
                                 </div>
                             </div>
                         </a>

@@ -33,22 +33,61 @@
                 <div class="d-flex container align-items-center gap-1">
                     <div>
 
-                        @if(!empty($card->old_price))
+{{--                        @if(!empty($card->old_price))--}}
 
-                            <p class="mx-2 mb-0 pb-0 bezskidki">{{$card->old_price}} ₽</p>
-                            <p class="mx-2 mb-2 mt-0 pt-0 soskidkoy "> {{$card->price}} ₽</p>
+{{--                            <p class="mx-2 mb-0 pb-0 bezskidki">{{$card->old_price}} ₽</p>--}}
+{{--                            <p class="mx-2 mb-2 mt-0 pt-0 soskidkoy "> {{$card->price}} ₽</p>--}}
 
-                        @else
-                            <div class="d-flex flex-column align-items-start">
+{{--                        @else--}}
+{{--                            <div class="d-flex flex-column align-items-start">--}}
 
-                                <p class="mx-2 mb-2 mt-0 pt-0 soskidkoy "> {{$card->price}} ₽</p>
-                            </div>
-                        @endif
+{{--                                <p class="mx-2 mb-2 mt-0 pt-0 soskidkoy "> {{$card->price}} ₽</p>--}}
+{{--                            </div>--}}
+{{--                        @endif--}}
                     </div>
                     <div>
-                        <button type="button" class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Сделать заказ
-                        </button>
+                        <!-- Внутри карточки, после описания -->
+                        @if(Auth::check())
+                            <div class="mt-4">
+                                <label for="rating" class="form-label fw-bold">Ваша оценка</label>
+                                <form action="{{ route('cards.rate',$card->product->slug) }}" method="POST" class="d-flex align-items-center">
+                                    @csrf
+
+                                    @php
+                                        // Получаем текущую оценку пользователя для этой карточки
+                                        $currentRating = \App\Models\CardView::where('user_id', \Illuminate\Support\Facades\Auth::id())
+                                            ->where('card_id', $card->id)
+                                            ->value('rating');
+                                    @endphp
+
+                                    <select
+                                        name="rating"
+                                        id="rating"
+                                        class="form-select w-75"
+                                    onchange="this.form.submit()"
+                                    >
+                                    <!-- Сначала вариант "Нет оценки", если оценки нет — он будет выбран -->
+                                    <option value="" {{ is_null($currentRating) ? 'selected' : '' }}>
+                                        Нет оценки
+                                    </option>
+
+                                    <!-- Затем варианты 1–10 -->
+                                    @for($i = 1; $i <= 10; $i++)
+                                        <option value="{{ $i }}" {{ $currentRating == $i ? 'selected' : '' }}>
+                                            {{ $i }} ★{{ str_repeat('★', $i - 1) }}
+                                        </option>
+                                        @endfor
+                                        </select>
+
+                                        <!-- Если оценка уже есть — показываем текст -->
+                                        @if($currentRating)
+                                            <span class="ms-3 text-muted">
+                    (Ваша текущая оценка: <strong>{{ $currentRating }} ★</strong>)
+                </span>
+                                        @endif
+                                </form>
+                            </div>
+                        @endif
 
 
                     </div>
