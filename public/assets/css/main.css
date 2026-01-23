@@ -14,7 +14,7 @@
 .photo-fixed {
     width: 247px;
     height: 165px;
-    object-fit: cover; /* Обрезает избыток, сохраняя пропорции */
+    object-fit: fill; /* Обрезает избыток, сохраняя пропорции */
     object-position: center; /* Центрирует изображение */
 }
 

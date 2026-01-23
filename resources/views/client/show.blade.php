@@ -26,7 +26,13 @@
                     <h1 class="shrift">@yield('h1')</h1>
 
                     <div class="mt-3">
-                        <p>{{$card->description}}</p>
+                        <p>Жанр: {{$card->genres}}</p>
+                        <br>
+                        <p>Продюссер: {{$card->director}}</p>
+                        <br>
+                        <p>Год: {{$card->release_year}}</p>
+                        <p>Описание:         {{$card->description}}</p>
+                        <br>
 
                     </div>
                 </div>
