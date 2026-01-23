@@ -49,7 +49,6 @@ class User extends Authenticatable
 
     public function calculatePreferences(): array
     {
-
         $views = $this->cardViews()->with('card')->get();
 
         if ($views->isEmpty()) {
@@ -58,6 +57,7 @@ class User extends Authenticatable
 
         $genreScores = [];
         $directorScores = [];
+        $actorScores = [];
         $totalRating = 0;
         $count = 0;
 
@@ -65,50 +65,63 @@ class User extends Authenticatable
             if (!$view->card) continue;
 
             $genres = explode(',', $view->card->genres ?? '');
-            $rating = $view->rating ?? 5;  // если нет оценки — нейтрально
+            $actors = explode(',', $view->card->actors ?? '');
+            $rating = $view->rating ?? 5; // если нет оценки — среднее
 
-            // Нормализованный вес: >5 = положительный, <5 = отрицательный
-            $normalizedWeight = ($rating - 5) / 5;  // 10 → +1, 5 → 0, 1 → -0.8
+            // Базовый вес за просмотр + модификатор от оценки
+            $baseWeight = 0.3; // +0.3 за сам факт просмотра
+            $ratingModifier = ($rating - 5) / 5; // 10 → +1, 5 → 0, 1 → -0.8
+            $weight = $baseWeight + $ratingModifier; // итоговый вес
 
             foreach ($genres as $genre) {
                 $genre = trim($genre);
                 if ($genre) {
-                    $genreScores[$genre] = ($genreScores[$genre] ?? 0) + ($rating / 5 - 1);  // 10 → +1, 5 → 0, 1 → -0.8
+                    $genreScores[$genre] = ($genreScores[$genre] ?? 0) + $weight;
                 }
             }
 
             if ($view->card->director) {
-                // В цикле foreach
-                $directorScores[$view->card->director] = ($directorScores[$view->card->director] ?? 0) + ($normalizedWeight * 1.5);  // ← режиссёр важнее жанра
+                $directorScores[$view->card->director] = ($directorScores[$view->card->director] ?? 0) + $weight;
+            }
+
+            foreach ($actors as $actor) {
+                $actor = trim($actor);
+                if ($actor) {
+                    $actorScores[$actor] = ($actorScores[$actor] ?? 0) + $weight;
+                }
             }
 
             $totalRating += $rating;
             $count++;
         }
 
-        // Нормализация жанров: сдвигаем к положительному диапазону (0–1)
-        $minGenre = min($genreScores ?: [0]);
+        // Нормализация жанров (на максимум)
         $maxGenre = max($genreScores ?: [0]);
-        $rangeGenre = $maxGenre - $minGenre;
-        if ($rangeGenre > 0) {
+        if ($maxGenre > 0) {
             foreach ($genreScores as $key => $value) {
-                $genreScores[$key] = round(($value - $minGenre) / $rangeGenre, 2);
+                $genreScores[$key] = round($value / $maxGenre, 2);
             }
         }
 
-        // То же для режиссёров
-        $minDirector = min($directorScores ?: [0]);
+        // Нормализация режиссёров и актёров
         $maxDirector = max($directorScores ?: [0]);
-        $rangeDirector = $maxDirector - $minDirector;
-        if ($rangeDirector > 0) {
+        if ($maxDirector > 0) {
             foreach ($directorScores as $key => $value) {
-                $directorScores[$key] = round(($value - $minDirector) / $rangeDirector, 2);
+                $directorScores[$key] = round($value / $maxDirector, 2);
+            }
+        }
+
+        $maxActor = max($actorScores ?: [0]);
+        if ($maxActor > 0) {
+            foreach ($actorScores as $key => $value) {
+                $actorScores[$key] = round($value / $maxActor, 2);
             }
         }
 
         return [
             'genres' => $genreScores,
             'directors' => $directorScores,
+            'actors' => $actorScores,
             'average_rating' => $count ? round($totalRating / $count, 1) : 0,
         ];
     }

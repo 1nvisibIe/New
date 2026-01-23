@@ -15,17 +15,33 @@ class RecommendationController extends Controller
     {
         $user = Auth::user();
 
+        $recommendations = collect();
+
         if ($user) {
             $engine = new RuleEngine();
             $recommendations = $engine->generateRecommendations($user, 10);
 
-            // Отладка: покажи профиль и сколько правил активировалось
-
+            // Если профиль пустой (нет просмотров) — показываем популярные
+            if ($recommendations->isEmpty()) {
+                $recommendations = Card::query()
+                    ->where('is_active', true)
+                    ->orderByDesc('views')
+                    ->take(10)
+                    ->get()
+                    ->each(function ($card) {
+                        $card->recommendation_explanation = 'Популярный фильм среди пользователей';
+                    });
+            }
         } else {
-            $recommendations = \App\Models\Card::where('is_active', true)
+            // Гость — популярные
+            $recommendations = Card::query()
+                ->where('is_active', true)
                 ->orderByDesc('views')
                 ->take(10)
-                ->get();
+                ->get()
+                ->each(function ($card) {
+                    $card->recommendation_explanation = 'Популярный фильм среди пользователей';
+                });
         }
 
         return view('client.recommendation', compact('recommendations'));
