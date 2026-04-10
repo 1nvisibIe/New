@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedInteger('group_id')->default(0);
             $table->unsignedInteger('category_id')->nullable();
             $table->string('sku', 100)->unique();
-            $table->string('name', 170);
-            $table->string('slug', 170)->unique();
+            $table->string('name', 255);
+            $table->string('slug', 255)->unique();
 
             $table->unsignedInteger('stock')->default(0);
             $table->decimal('price', 12, 2);

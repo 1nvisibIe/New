@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use JetBrains\PhpStorm\NoReturn;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class ProductCardsController extends Controller
 {
 
     public function __construct(Request $request)
     {
-       dump($request->route()->getName());
+
     }
 
     /**
@@ -18,7 +19,11 @@ class ProductCardsController extends Controller
      */
     public function index()
     {
-        return view("ProductCards.index");
+
+
+
+
+        return Inertia::render('Test', ['message' => 'Это тест React в Laravel!']);
     }
 
     /**
@@ -70,4 +75,6 @@ class ProductCardsController extends Controller
     {
         //
     }
+
+
 }

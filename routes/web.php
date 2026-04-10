@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CardController;
 
 use App\Http\Controllers\Client\MainClientController;
 use App\Http\Controllers\Client\SearchController;
+use App\Http\Controllers\ProductCardsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
@@ -62,4 +63,8 @@ Route::post('/login',[UserController::class,'login'])->name('login');
 
 });
 Route::post('/logout',[UserController::class,'logout'])->name('logout')->middleware('auth');
+
+
+
+Route::get('/test',[ProductCardsController::class,'index'])->name('test');
 
