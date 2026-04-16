@@ -11,9 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {   protected $fillable = ['sku','name','slug','description','price','stock','is_active','category_id'];
-    public function brand():BelongsTo{
-        return $this->BelongsTo(Brand::class,'brand_id','id');
-    }
 
     public function category(): BelongsTo
     {

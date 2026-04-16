@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductImage extends Model
-{protected $fillable = ['is_main','path','product_id'];
+{
+    protected $fillable = ['is_main','path','product_id'];
     public function product(): BelongsTo
     {
         return $this->BelongsTo(Product::class,'product_id','id');
