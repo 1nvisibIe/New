@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -15,9 +16,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::orderBy('id','desc')->paginate(3);
+        $products = Product::with('category')->orderBy('id','desc')->paginate(3);
 
-        return view('admin.products.index', compact('products'));
+        return Inertia::render('Admin/Products/Index/Index', compact('products'));
     }
 
     /**
@@ -26,7 +27,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        return Inertia::render('Admin/Products/Create/Create', compact('categories'));
     }
 
     /**
@@ -56,9 +57,9 @@ class ProductController extends Controller
 
     public function edit(string $id)
     {
-        $products = Product::find($id);
+        $products = Product::with('category')->find($id);
         $categories = Category::all();
-        return view('admin.products.edit', compact('products','categories'));
+        return Inertia::render('Admin/Products/Edit/Edit', compact('products','categories'));
     }
 
     /**
@@ -74,7 +75,7 @@ class ProductController extends Controller
             'name'=>$request->name,
             'price'=>$request->price,
             'stock'=>$request->stock,
-            'category_id'=>$request->category,
+            'category_id'=>$request->category ,
             'slug' => Str::slug($request->name,'-')
         ]);
         return redirect()->route('products.index')->with('success','Изменения сохранены');

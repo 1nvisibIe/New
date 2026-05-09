@@ -6,6 +6,7 @@
 
     <!-- Динамический заголовок через Inertia -->
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
+
     @viteReactRefresh
     <!-- Vite подключает CSS и JS -->
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])

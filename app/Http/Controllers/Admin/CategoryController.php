@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
@@ -16,7 +17,7 @@ class CategoryController extends Controller
     {
         $categories = Category::with('parent')->orderBy('id','desc')->paginate(3);
 
-        return view('admin.categories.index', compact('categories'));
+        return Inertia::render('Admin/Categories/Index/Index', compact('categories'));
     }
 
     /**
@@ -26,7 +27,7 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return view('admin.categories.create', compact('categories'));
+        return Inertia::render('Admin/Categories/Create/Create', compact('categories'));
 
     }
 
@@ -39,8 +40,8 @@ class CategoryController extends Controller
 
         Category::create([
             'name'=>$request->name,
-            'slug' => Str::slug($request->name,'-')
-
+            'slug' => Str::slug($request->name,'-'),
+            'parent_id'=>$request->parent
         ]);
         $request->session()->flash('success','Категория добавлена');
         return redirect()->route('categories.index');
@@ -52,7 +53,7 @@ class CategoryController extends Controller
     {
        $categories = Category::all();
        $category = Category::find($id);
-       return view('admin.categories.edit', compact('category','categories'));
+       return Inertia::render('Admin/Categories/Edit/Edit', compact('category','categories'));
     }
 
     /**

@@ -1,0 +1,64 @@
+.form-wrapper {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    max-width: 672px;
+}
+
+.form-wrapper-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.form-wrapper-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.form-wrapper-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-wrapper-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Кнопка отправки */
+.btn-primary {
+    background: #125dff;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-primary:hover { background: #1549e6; }
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Ссылка отмены */
+.btn-cancel {
+    font-size: 14px;
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.btn-cancel:hover { color: #374151; }

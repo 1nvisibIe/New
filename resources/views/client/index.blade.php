@@ -60,7 +60,7 @@
                             <a href="{{route('Catalog.single',['slug'=>$card->product->slug])}}">
                                 <div class="card h-100">
                                     <div class="p-2">
-                                        <img src="{{$card->product->getimage()}}" class="card-img-top photo-fixed" alt="">
+                                        <img src="{{$card->product->image_url}}" class="card-img-top photo-fixed" alt="">
                                     </div>
                                     <div class="card-body d-flex flex-column h-100">
 

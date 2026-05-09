@@ -1,43 +1,12 @@
-import { jsxs, jsx } from "react/jsx-runtime";
-import React2, { useState, createContext, forwardRef, useRef, useMemo, useEffect, useImperativeHandle, createElement, useCallback, useLayoutEffect, Fragment } from "react";
+import { jsxs, jsx, Fragment as Fragment$1 } from "react/jsx-runtime";
 import { config as config$1, isUrlMethodPair, mergeDataIntoQueryString, getScrollableParent, useInfiniteScroll, router, UseFormUtils, formDataToObject, FormComponentResetSymbol, resetFormFields, shouldIntercept, shouldNavigate, getInitialPageFromDOM, setupProgress, createHeadManager } from "@inertiajs/core";
+import React2, { createContext, forwardRef, useRef, useMemo, useState, useEffect, useImperativeHandle, createElement, useCallback, useLayoutEffect, Fragment } from "react";
 import { flushSync } from "react-dom";
 import { cloneDeep, isEqual, set, has, get } from "lodash-es";
 import { createValidator, toSimpleValidationErrors, resolveName } from "laravel-precognition";
+import { LayoutDashboard, Package, Tag, CreditCard, ChevronDown, Menu, Plus, Check, X, Pencil, Trash2, ShoppingCart, Heart } from "lucide-react";
 import createServer from "@inertiajs/core/server";
 import ReactDOMServer from "react-dom/server";
-const __vite_glob_0_0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null
-}, Symbol.toStringTag, { value: "Module" }));
-function Test({ message }) {
-  const [count, setCount] = useState(0);
-  return /* @__PURE__ */ jsxs("div", { style: { padding: "60px", backgroundColor: "#f8f9fa", minHeight: "100vh" }, children: [
-    /* @__PURE__ */ jsx("h1", { style: { color: "#dc3545", fontSize: "3.5rem" }, children: "ТЕСТ РАБОТАЕТ!" }),
-    /* @__PURE__ */ jsx("h1", { style: { color: "#dc3545", fontSize: "3.5rem" }, children: "SSR ТЕСТ" }),
-    /* @__PURE__ */ jsxs("p", { style: { fontSize: "1.8rem" }, children: [
-      "Сообщение от Laravel: ",
-      message
-    ] }),
-    /* @__PURE__ */ jsxs("div", { style: { marginTop: "30px" }, children: [
-      /* @__PURE__ */ jsxs("p", { style: { fontSize: "1.5rem" }, children: [
-        "Счётчик: ",
-        count
-      ] }),
-      /* @__PURE__ */ jsx(
-        "button",
-        {
-          onClick: () => setCount(count + 1),
-          style: { padding: "15px 30px", fontSize: "1.2rem", backgroundColor: "#198754", color: "white", border: "none", borderRadius: "8px", cursor: "pointer" },
-          children: "+1"
-        }
-      )
-    ] })
-  ] });
-}
-const __vite_glob_0_1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: Test
-}, Symbol.toStringTag, { value: "Module" }));
 var headContext = createContext(null);
 headContext.displayName = "InertiaHeadContext";
 var HeadContext_default = headContext;
@@ -113,7 +82,7 @@ function App({
       return Component.layout(child);
     }
     if (Array.isArray(Component.layout)) {
-      return Component.layout.concat(child).reverse().reduce((children2, Layout) => createElement(Layout, { children: children2, ...props }));
+      return Component.layout.concat(child).reverse().reduce((children2, Layout2) => createElement(Layout2, { children: children2, ...props }));
     }
     return child;
   });
@@ -208,6 +177,13 @@ function useIsomorphicLayoutEffect(effect, deps) {
   typeof window === "undefined" ? useEffect(effect, deps) : useLayoutEffect(effect, deps);
 }
 var isReact19 = typeof React2.use === "function";
+function usePage() {
+  const page = isReact19 ? React2.use(PageContext_default) : React2.useContext(PageContext_default);
+  if (!page) {
+    throw new Error("usePage must be used within the Inertia component");
+  }
+  return page;
+}
 function useRemember(initialState, key, excludeKeysRef) {
   const [state, setState] = useState(() => {
     const restored = router.restore(key);
@@ -1256,13 +1232,977 @@ var Link = forwardRef(
   }
 );
 Link.displayName = "InertiaLink";
+var Link_default = Link;
+var router3 = router;
 var config = config$1.extend();
+const menuItems = [
+  {
+    label: "Главная",
+    icon: LayoutDashboard,
+    href: "/admin"
+  },
+  {
+    label: "Товары",
+    icon: Package,
+    children: [
+      { label: "Список товаров", href: "/admin/products" },
+      { label: "Новый товар", href: "/admin/products/create" }
+    ]
+  },
+  {
+    label: "Категории",
+    icon: Tag,
+    children: [
+      { label: "Список категорий", href: "/admin/categories" },
+      { label: "Новая категория", href: "/admin/categories/create" }
+    ]
+  },
+  {
+    label: "Карточки",
+    icon: CreditCard,
+    children: [
+      { label: "Список карточек", href: "/admin/cards" },
+      { label: "Новая карточка", href: "/admin/cards/create" }
+    ]
+  }
+];
+function Layout({ children, title }) {
+  const { url } = usePage();
+  const [openGroups, setOpenGroups] = useState(() => {
+    try {
+      const saved = localStorage.getItem("adminOpenGroups");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const toggleGroup = (label) => {
+    setOpenGroups((prev) => {
+      const next = { ...prev, [label]: !prev[label] };
+      localStorage.setItem("adminOpenGroups", JSON.stringify(next));
+      return next;
+    });
+  };
+  const isExactActive = (href) => url === href;
+  const isChildActive = (href) => url === href;
+  const isGroupActive = (children2) => children2.some((c) => isChildActive(c.href));
+  return /* @__PURE__ */ jsxs("div", { className: "admin-wrapper", children: [
+    /* @__PURE__ */ jsxs("aside", { className: `sidebar ${sidebarOpen ? "open" : "closed"}`, children: [
+      /* @__PURE__ */ jsx("div", { className: "sidebar-logo", children: /* @__PURE__ */ jsx("span", { children: "ЗОЛУШКАМ.NET" }) }),
+      /* @__PURE__ */ jsx("nav", { className: "sidebar-nav", children: menuItems.map((item) => {
+        const Icon = item.icon;
+        if (!item.children) {
+          return /* @__PURE__ */ jsxs(
+            Link_default,
+            {
+              href: item.href,
+              className: `nav-element ${isExactActive(item.href) ? "active" : ""}`,
+              children: [
+                /* @__PURE__ */ jsx(Icon, { size: 18 }),
+                item.label
+              ]
+            },
+            item.label
+          );
+        }
+        const groupActive = isGroupActive(item.children);
+        const groupOpen = openGroups[item.label] ?? groupActive;
+        return /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsxs(
+            "button",
+            {
+              onClick: () => toggleGroup(item.label),
+              className: `nav-element ${groupActive ? "parent-active" : ""}`,
+              children: [
+                /* @__PURE__ */ jsx(Icon, { size: 18 }),
+                /* @__PURE__ */ jsx("span", { children: item.label }),
+                /* @__PURE__ */ jsx(
+                  ChevronDown,
+                  {
+                    size: 16,
+                    className: `nav-arrow ${groupOpen ? "rotated" : ""}`
+                  }
+                )
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsx("div", { className: `nav-submenu ${groupOpen ? "open" : ""}`, children: item.children.map((child) => /* @__PURE__ */ jsxs(
+            Link_default,
+            {
+              href: child.href,
+              className: `nav-child ${isChildActive(child.href) ? "active" : ""}`,
+              children: [
+                /* @__PURE__ */ jsx("span", { className: "nav-dot" }),
+                child.label
+              ]
+            },
+            child.label
+          )) })
+        ] }, item.label);
+      }) })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "admin-content", children: [
+      /* @__PURE__ */ jsxs("header", { className: "admin-header", children: [
+        /* @__PURE__ */ jsx("button", { onClick: () => setSidebarOpen((p) => !p), className: "menu-btn", children: /* @__PURE__ */ jsx(Menu, { size: 22 }) }),
+        /* @__PURE__ */ jsx("h1", { className: "admin-title", children: title }),
+        /* @__PURE__ */ jsx("a", { href: "/", target: "_blank", className: "site-link", children: "Перейти на сайт" })
+      ] }),
+      /* @__PURE__ */ jsx("main", { className: "admin-main", children })
+    ] })
+  ] });
+}
+const __vite_glob_0_6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Layout
+}, Symbol.toStringTag, { value: "Module" }));
+function FormField({ label, id, error, children }) {
+  return /* @__PURE__ */ jsxs("div", { className: "form-field", children: [
+    /* @__PURE__ */ jsx("label", { className: "form-label", htmlFor: id, children: label }),
+    children,
+    error && /* @__PURE__ */ jsx("p", { className: "form-error", children: error })
+  ] });
+}
+function FormWrapper({ title, children, onSubmit, processing, cancelHref, submitLabel = "Сохранить" }) {
+  return /* @__PURE__ */ jsxs("div", { className: "form-wrapper", children: [
+    /* @__PURE__ */ jsx("div", { className: "form-wrapper-header", children: /* @__PURE__ */ jsx("h2", { className: "form-wrapper-title", children: title }) }),
+    /* @__PURE__ */ jsxs("form", { onSubmit, children: [
+      /* @__PURE__ */ jsx("div", { className: "form-wrapper-body", children }),
+      /* @__PURE__ */ jsxs("div", { className: "form-wrapper-footer", children: [
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "submit",
+            disabled: processing,
+            className: "btn-primary",
+            children: processing ? "Сохранение..." : submitLabel
+          }
+        ),
+        cancelHref && /* @__PURE__ */ jsx(Link_default, { href: cancelHref, className: "btn-cancel", children: "Отмена" })
+      ] })
+    ] })
+  ] });
+}
+function Create$2({ products }) {
+  const { data, setData, post, processing, errors } = useForm({
+    name: "",
+    product: "",
+    price: "",
+    old_price: "",
+    is_active: false,
+    mainImage: "",
+    description: ""
+  });
+  const [preview, setPreview] = useState(products.image_url);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    post("/admin/cards", { forceFormData: true });
+  };
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setData("mainImage", file);
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Новая карточка товара", children: /* @__PURE__ */ jsxs(
+    FormWrapper,
+    {
+      title: "Создание карточки товара",
+      onSubmit: handleSubmit,
+      cancelHref: "/admin/cards",
+      processing,
+      submitLabel: "Создать карточку товара",
+      children: [
+        /* @__PURE__ */ jsx(FormField, { label: "Наименование", id: "name", error: errors.name, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "name",
+            type: "text",
+            value: data.name,
+            onChange: (e) => setData("name", e.target.value),
+            className: `form-input ${errors.name ? "error" : ""}`,
+            placeholder: "Наименование"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Товар", id: "product", error: errors.product, children: /* @__PURE__ */ jsx(
+          "select",
+          {
+            id: "product",
+            value: data.product,
+            onChange: (e) => setData("product", e.target.value),
+            disabled: products.length === 0,
+            className: `form-input ${errors.product ? "error" : ""}`,
+            children: products.length > 0 ? /* @__PURE__ */ jsxs(Fragment$1, { children: [
+              /* @__PURE__ */ jsx("option", { value: "", children: "— Выберите товар —" }),
+              products.map((product) => /* @__PURE__ */ jsx("option", { value: product.id, children: product.name }, product.id))
+            ] }) : /* @__PURE__ */ jsx("option", { value: "", children: "Все товары уже имеют карточку (сначала добавьте новый товар)" })
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Цена", id: "price", error: errors.price, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "price",
+            type: "text",
+            value: data.price,
+            onChange: (e) => setData("price", e.target.value),
+            className: `form-input ${errors.price ? "error" : ""}`,
+            placeholder: "Цена"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Старая цена", id: "old_price", error: errors.old_price, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "old_price",
+            type: "text",
+            value: data.old_price,
+            onChange: (e) => setData("old_price", e.target.value),
+            className: `form-input ${errors.old_price ? "error" : ""}`,
+            placeholder: "Старая цена"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Актуальность", id: "is_active", error: errors.is_active, children: /* @__PURE__ */ jsx("div", { className: "checkbox-layout", children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            type: "checkbox",
+            id: "is_active",
+            name: "is_active",
+            checked: data.is_active,
+            onChange: (e) => setData("is_active", e.target.checked)
+          }
+        ) }) }),
+        /* @__PURE__ */ jsxs("div", { className: "image-field", children: [
+          /* @__PURE__ */ jsx("label", { className: "form-label", children: "Изображение" }),
+          /* @__PURE__ */ jsxs("div", { className: "image-field-inner", children: [
+            /* @__PURE__ */ jsx(
+              "input",
+              {
+                type: "file",
+                id: "mainImage",
+                className: "file-input",
+                onChange: handleImage
+              }
+            ),
+            /* @__PURE__ */ jsx("label", { htmlFor: "mainImage", className: "file-label", children: "Выберите изображение" }),
+            /* @__PURE__ */ jsx("div", { className: "image-preview", children: /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: preview,
+                alt: "Фото товара",
+                className: "preview-img"
+              }
+            ) })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx(FormField, { label: "Описание", id: "description", error: errors.description, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "description",
+            type: "text",
+            value: data.description,
+            onChange: (e) => setData("price", e.target.value),
+            className: `form-input ${errors.description ? "error" : ""}`
+          }
+        ) })
+      ]
+    }
+  ) });
+}
+const __vite_glob_0_0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Create$2
+}, Symbol.toStringTag, { value: "Module" }));
+function Edit$2({ cards, product }) {
+  const { data, setData, put, processing, errors } = useForm({
+    name: cards.name || "",
+    price: cards.price || "",
+    old_price: cards.old_price || "",
+    stock: product.stock || "",
+    is_active: cards.is_active || false,
+    mainImage: cards.mainImage || "",
+    description: cards.description || ""
+  });
+  const [preview, setPreview] = useState(cards.product.image_url);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    put(`/admin/cards/${cards.id}`, { forceFormData: true });
+  };
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setData("mainImage", file);
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Редактирование карточки", children: /* @__PURE__ */ jsxs(
+    FormWrapper,
+    {
+      title: `Карточка ${cards.name}`,
+      onSubmit: handleSubmit,
+      processing,
+      cancelHref: "/admin/cards",
+      submitLabel: "Обновить карточку",
+      children: [
+        /* @__PURE__ */ jsx(FormField, { label: "Наименование карточки", id: "name", error: errors.name, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "name",
+            type: "text",
+            value: data.name,
+            onChange: (e) => setData("name", e.target.value),
+            className: `form-input ${errors.name ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Цена", id: "price", error: errors.price, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "price",
+            type: "text",
+            value: data.price,
+            onChange: (e) => setData("price", e.target.value),
+            className: `form-input ${errors.price ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Старая цена", id: "old_price", error: errors.old_price, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "old_price",
+            type: "text",
+            value: data.old_price,
+            onChange: (e) => setData("old_price", e.target.value),
+            className: `form-input ${errors.old_price ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Наличие", id: "stock", error: errors.stock, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "stock",
+            type: "text",
+            value: data.stock,
+            onChange: (e) => setData("stock", e.target.value),
+            className: `form-input ${errors.stock ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Актуальность", id: "is_active", error: errors.is_active, children: /* @__PURE__ */ jsx("div", { className: "checkbox-layout", children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            type: "checkbox",
+            id: "is_active",
+            name: "is_active",
+            checked: data.is_active,
+            onChange: (e) => setData("is_active", e.target.checked)
+          }
+        ) }) }),
+        /* @__PURE__ */ jsxs("div", { className: "image-field", children: [
+          /* @__PURE__ */ jsx("label", { className: "form-label", children: "Изображение" }),
+          /* @__PURE__ */ jsxs("div", { className: "image-field-inner", children: [
+            /* @__PURE__ */ jsx(
+              "input",
+              {
+                type: "file",
+                id: "mainImage",
+                className: "file-input",
+                onChange: handleImage
+              }
+            ),
+            /* @__PURE__ */ jsx("label", { htmlFor: "mainImage", className: "file-label", children: "Выберите изображение" }),
+            /* @__PURE__ */ jsx("div", { className: "image-preview", children: /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: preview,
+                alt: "Фото товара",
+                className: "preview-img"
+              }
+            ) })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx(FormField, { label: "Описание", id: "description", error: errors.description, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "description",
+            type: "text",
+            value: data.description,
+            onChange: (e) => setData("price", e.target.value),
+            className: `form-input ${errors.description ? "error" : ""}`
+          }
+        ) })
+      ]
+    }
+  ) });
+}
+const __vite_glob_0_1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Edit$2
+}, Symbol.toStringTag, { value: "Module" }));
+function Index$3({ cards }) {
+  const handleDelete = (id) => {
+    if (!confirm("Подтвердите удаление")) return;
+    router3.delete(`/admin/cards/${id}`);
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Карточки", children: /* @__PURE__ */ jsxs("div", { className: "table-wrap", children: [
+    /* @__PURE__ */ jsxs("div", { className: "table-header", children: [
+      /* @__PURE__ */ jsx("h2", { className: "table-title", children: "Список карточек" }),
+      /* @__PURE__ */ jsxs(Link_default, { href: "/admin/cards/create", className: "btn-add", children: [
+        /* @__PURE__ */ jsx(Plus, { size: 16 }),
+        "Добавить карточку"
+      ] })
+    ] }),
+    cards.data.length > 0 ? /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("table", { className: "data-table", children: [
+      /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
+        /* @__PURE__ */ jsx("th", { children: "#" }),
+        /* @__PURE__ */ jsx("th", { children: "Наименование карточки" }),
+        /* @__PURE__ */ jsx("th", { children: "Наименование товара" }),
+        /* @__PURE__ */ jsx("th", { children: "Цена" }),
+        /* @__PURE__ */ jsx("th", { children: "Старая цена" }),
+        /* @__PURE__ */ jsx("th", { children: "Наличие" }),
+        /* @__PURE__ */ jsx("th", { children: "Актуальность" }),
+        /* @__PURE__ */ jsx("th", { children: "Изображение" }),
+        /* @__PURE__ */ jsx("th", { children: "Описание" }),
+        /* @__PURE__ */ jsx("th", { children: "Actions" })
+      ] }) }),
+      /* @__PURE__ */ jsx("tbody", { children: cards.data.map((card) => /* @__PURE__ */ jsxs("tr", { children: [
+        /* @__PURE__ */ jsx("td", { className: "td-id", children: card.id }),
+        /* @__PURE__ */ jsx("td", { className: "td-name", children: card.name }),
+        /* @__PURE__ */ jsx("td", { className: "td-name", children: card.product.name }),
+        /* @__PURE__ */ jsx("td", { className: "td-name", children: card.price }),
+        /* @__PURE__ */ jsx("td", { className: "td-price", children: card.old_price }),
+        /* @__PURE__ */ jsx("td", { children: /* @__PURE__ */ jsx(
+          "span",
+          {
+            className: `badge ${card.product.stock > 0 ? "badge-green" : "badge-red"}`,
+            children: card.product.stock > 0 ? `${card.product.stock} шт.` : "Нет в наличии"
+          }
+        ) }),
+        /* @__PURE__ */ jsx("td", { className: "td-active", children: card.is_active ? /* @__PURE__ */ jsx(Check, { color: "#13812f" }) : /* @__PURE__ */ jsx(X, { color: "#f24545" }) }),
+        /* @__PURE__ */ jsx("td", { className: "td-image", children: /* @__PURE__ */ jsx(
+          "img",
+          {
+            src: card.product.image_url,
+            alt: card.name,
+            className: "product-img"
+          }
+        ) }),
+        /* @__PURE__ */ jsx("td", { className: "td-name", children: card.description }),
+        /* @__PURE__ */ jsx("td", { children: /* @__PURE__ */ jsxs("div", { className: "actions", children: [
+          /* @__PURE__ */ jsx(
+            Link_default,
+            {
+              href: `/admin/cards/${card.id}/edit`,
+              className: "btn-edit",
+              children: /* @__PURE__ */ jsx(Pencil, { size: 14 })
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: () => handleDelete(card.id),
+              className: "btn-delete",
+              children: /* @__PURE__ */ jsx(Trash2, { size: 14 })
+            }
+          )
+        ] }) })
+      ] }, card.id)) })
+    ] }) }) : /* @__PURE__ */ jsx("div", { className: "table-empty", children: "Карточек пока нет" }),
+    cards.links && /* @__PURE__ */ jsx("div", { className: "pagination", children: cards.links.map((link, i) => /* @__PURE__ */ jsx(
+      Link_default,
+      {
+        href: link.url ?? "#",
+        className: `page-link ${link.active ? "active" : link.url ? "available" : "disabled"}`,
+        dangerouslySetInnerHTML: { __html: link.label }
+      },
+      i
+    )) })
+  ] }) });
+}
+const __vite_glob_0_2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Index$3
+}, Symbol.toStringTag, { value: "Module" }));
+function Create$1({ categories }) {
+  const { data, setData, post, processing, errors } = useForm({
+    name: "",
+    parent: ""
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    post("/admin/categories");
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Новая Категория", children: /* @__PURE__ */ jsxs(
+    FormWrapper,
+    {
+      title: "Создание категории",
+      onSubmit: handleSubmit,
+      cancelHref: "/admin/categories",
+      processing,
+      submitLabel: "Создать Категорию",
+      children: [
+        /* @__PURE__ */ jsx(FormField, { label: "Наименование", id: "name", error: errors.name, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "name",
+            type: "text",
+            value: data.name,
+            onChange: (e) => setData("name", e.target.value),
+            className: `form-input ${errors.name ? "error" : ""}`,
+            placeholder: "Наименование"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Родительская категория", id: "parent", error: errors.parent, children: /* @__PURE__ */ jsxs(
+          "select",
+          {
+            id: "parent",
+            value: data.parent,
+            onChange: (e) => setData("parent", e.target.value),
+            className: `form-input ${errors.parent ? "error" : ""}`,
+            children: [
+              /* @__PURE__ */ jsx("option", { value: "", children: "— Выберите категорию —" }),
+              /* @__PURE__ */ jsx("option", { value: "", children: "Нет" }),
+              categories.map((cat) => /* @__PURE__ */ jsx("option", { value: cat.id, children: cat.name }, cat.id))
+            ]
+          }
+        ) })
+      ]
+    }
+  ) });
+}
+const __vite_glob_0_3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Create$1
+}, Symbol.toStringTag, { value: "Module" }));
+function Edit$1({ category, categories }) {
+  const { data, setData, put, processing, errors } = useForm({
+    name: category.name || "",
+    parent: category.parent_id || ""
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    put(`/admin/categories/${category.id}`);
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Редактирование категории", children: /* @__PURE__ */ jsxs(
+    FormWrapper,
+    {
+      title: `Категория ${data.name}`,
+      onSubmit: handleSubmit,
+      processing,
+      cancelHref: "/admin/categories",
+      submitLabel: "Обновить Категорию",
+      children: [
+        /* @__PURE__ */ jsx(FormField, { label: "Наименование", id: "name", error: errors.name, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "name",
+            type: "text",
+            value: data.name,
+            onChange: (e) => setData("name", e.target.value),
+            className: `form-input ${errors.name ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Родительская категория", id: "parent", error: errors.parent, children: /* @__PURE__ */ jsxs(
+          "select",
+          {
+            id: "parent",
+            value: data.parent,
+            onChange: (e) => setData("parent", e.target.value),
+            className: `form-input ${errors.parent ? "error" : ""}`,
+            children: [
+              /* @__PURE__ */ jsx("option", { value: "", children: "Нет" }),
+              categories.map((cat) => /* @__PURE__ */ jsx("option", { value: cat.id, children: cat.name }, cat.id))
+            ]
+          }
+        ) })
+      ]
+    }
+  ) });
+}
+const __vite_glob_0_4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Edit$1
+}, Symbol.toStringTag, { value: "Module" }));
+function Index$2({ categories }) {
+  const handleDelete = (id) => {
+    if (!confirm("Подтвердите удаление")) return;
+    router3.delete(`/admin/categories/${id}`);
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Категории", children: /* @__PURE__ */ jsxs("div", { className: "table-wrapper", children: [
+    /* @__PURE__ */ jsxs("div", { className: "table-header", children: [
+      /* @__PURE__ */ jsx("h2", { className: "table-title", children: "Список категорий" }),
+      /* @__PURE__ */ jsxs(Link_default, { href: "/admin/categories/create", className: "btn-add", children: [
+        /* @__PURE__ */ jsx(Plus, { size: 16 }),
+        "Добавить категорию"
+      ] })
+    ] }),
+    categories.data.length > 0 ? /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("table", { className: "data-table", children: [
+      /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
+        /* @__PURE__ */ jsx("th", { children: "#" }),
+        /* @__PURE__ */ jsx("th", { children: "Наименование" }),
+        /* @__PURE__ */ jsx("th", { children: "Родитель" }),
+        /* @__PURE__ */ jsx("th", { children: "Действия" })
+      ] }) }),
+      /* @__PURE__ */ jsx("tbody", { children: categories.data.map((category) => /* @__PURE__ */ jsxs("tr", { children: [
+        /* @__PURE__ */ jsx("td", { className: "td-id", children: category.id }),
+        /* @__PURE__ */ jsx("td", { className: "td-name", children: category.name }),
+        /* @__PURE__ */ jsx("td", { className: "td-category", children: category.parent ? category.parent.name : category.parent_id ? "Не найдена" : "Корневая" }),
+        /* @__PURE__ */ jsx("td", { children: /* @__PURE__ */ jsxs("div", { className: "actions", children: [
+          /* @__PURE__ */ jsx(
+            Link_default,
+            {
+              href: `/admin/categories/${category.id}/edit`,
+              className: "btn-edit",
+              children: /* @__PURE__ */ jsx(Pencil, { size: 14 })
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: () => handleDelete(category.id),
+              className: "btn-delete",
+              children: /* @__PURE__ */ jsx(Trash2, { size: 14 })
+            }
+          )
+        ] }) })
+      ] }, category.id)) })
+    ] }) }) : /* @__PURE__ */ jsx("div", { className: "table-empty", children: "Категорий пока нет" }),
+    categories.links && /* @__PURE__ */ jsx("div", { className: "pagination", children: categories.links.map((link, i) => /* @__PURE__ */ jsx(
+      Link_default,
+      {
+        href: link.url ?? "#",
+        className: `page-link ${link.active ? "active" : link.url ? "available" : "disabled"}`,
+        dangerouslySetInnerHTML: { __html: link.label }
+      },
+      i
+    )) })
+  ] }) });
+}
+const __vite_glob_0_5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Index$2
+}, Symbol.toStringTag, { value: "Module" }));
+function Main({}) {
+  return /* @__PURE__ */ jsx(Layout, { title: "Главная" });
+}
+const __vite_glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Main
+}, Symbol.toStringTag, { value: "Module" }));
+function Create({ categories }) {
+  const { data, setData, post, processing, errors } = useForm({
+    sku: "",
+    name: "",
+    stock: "",
+    category: "",
+    price: ""
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    post("/admin/products");
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Новый товар", children: /* @__PURE__ */ jsxs(
+    FormWrapper,
+    {
+      title: "Создание товара",
+      onSubmit: handleSubmit,
+      cancelHref: "/admin/products",
+      processing,
+      submitLabel: "Создать товар",
+      children: [
+        /* @__PURE__ */ jsx(FormField, { label: "SKU", id: "sku", error: errors.sku, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "sku",
+            type: "text",
+            value: data.sku,
+            onChange: (e) => setData("sku", e.target.value),
+            className: `form-input ${errors.sku ? "error" : ""}`,
+            placeholder: "SKU"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Наименование", id: "name", error: errors.name, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "name",
+            type: "text",
+            value: data.name,
+            onChange: (e) => setData("name", e.target.value),
+            className: `form-input ${errors.name ? "error" : ""}`,
+            placeholder: "Наименование"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Наличие", id: "stock", error: errors.stock, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "stock",
+            type: "text",
+            value: data.stock,
+            onChange: (e) => setData("stock", e.target.value),
+            className: `form-input ${errors.stock ? "error" : ""}`,
+            placeholder: "Наличие"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Категория", id: "category", error: errors.category, children: /* @__PURE__ */ jsxs(
+          "select",
+          {
+            id: "category",
+            value: data.category,
+            onChange: (e) => setData("category", e.target.value),
+            className: `form-input ${errors.category ? "error" : ""}`,
+            children: [
+              /* @__PURE__ */ jsx("option", { value: "", children: "— Выберите категорию —" }),
+              /* @__PURE__ */ jsx("option", { value: "", children: "Нет" }),
+              categories.map((cat) => /* @__PURE__ */ jsx("option", { value: cat.id, children: cat.name }, cat.id))
+            ]
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Себестоимость", id: "price", error: errors.price, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "price",
+            type: "text",
+            value: data.price,
+            onChange: (e) => setData("price", e.target.value),
+            className: `form-input ${errors.price ? "error" : ""}`,
+            placeholder: "Себестоимость"
+          }
+        ) })
+      ]
+    }
+  ) });
+}
+const __vite_glob_0_8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Create
+}, Symbol.toStringTag, { value: "Module" }));
+function Edit({ products, categories }) {
+  const { data, setData, put, processing, errors } = useForm({
+    sku: products.sku || "",
+    name: products.name || "",
+    stock: products.stock || "",
+    category: products.category?.id || "",
+    price: products.price || ""
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    put(`/admin/products/${products.id}`);
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Редактирование товара", children: /* @__PURE__ */ jsxs(
+    FormWrapper,
+    {
+      title: `Товар ${products.name}`,
+      onSubmit: handleSubmit,
+      processing,
+      cancelHref: "/admin/products",
+      submitLabel: "Обновить товар",
+      children: [
+        /* @__PURE__ */ jsx(FormField, { label: "SKU", id: "sku", error: errors.sku, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "sku",
+            type: "text",
+            value: data.sku,
+            onChange: (e) => setData("sku", e.target.value),
+            className: `form-input ${errors.sku ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Наименование", id: "name", error: errors.name, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "name",
+            type: "text",
+            value: data.name,
+            onChange: (e) => setData("name", e.target.value),
+            className: `form-input ${errors.name ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Наличие", id: "stock", error: errors.stock, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "stock",
+            type: "text",
+            value: data.stock,
+            onChange: (e) => setData("stock", e.target.value),
+            className: `form-input ${errors.stock ? "error" : ""}`
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Категория", id: "category", error: errors.category, children: /* @__PURE__ */ jsxs(
+          "select",
+          {
+            id: "category",
+            value: data.category,
+            onChange: (e) => setData("category", e.target.value),
+            className: `form-input ${errors.category ? "error" : ""}`,
+            children: [
+              /* @__PURE__ */ jsx("option", { value: "", children: "Нет" }),
+              categories.map((cat) => /* @__PURE__ */ jsx("option", { value: cat.id, children: cat.name }, cat.id))
+            ]
+          }
+        ) }),
+        /* @__PURE__ */ jsx(FormField, { label: "Себестоимость", id: "price", error: errors.price, children: /* @__PURE__ */ jsx(
+          "input",
+          {
+            id: "price",
+            type: "text",
+            value: data.price,
+            onChange: (e) => setData("price", e.target.value),
+            className: `form-input ${errors.price ? "error" : ""}`
+          }
+        ) })
+      ]
+    }
+  ) });
+}
+const __vite_glob_0_9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Edit
+}, Symbol.toStringTag, { value: "Module" }));
+function Index$1({ products }) {
+  const handleDelete = (id) => {
+    if (!confirm("Подтвердите удаление")) return;
+    router3.delete(`/admin/products/${id}`);
+  };
+  return /* @__PURE__ */ jsx(Layout, { title: "Товары", children: /* @__PURE__ */ jsxs("div", { className: "table-wrap", children: [
+    /* @__PURE__ */ jsxs("div", { className: "table-header", children: [
+      /* @__PURE__ */ jsx("h2", { className: "table-title", children: "Список товаров" }),
+      /* @__PURE__ */ jsxs(Link_default, { href: "/admin/products/create", className: "btn-add", children: [
+        /* @__PURE__ */ jsx(Plus, { size: 16 }),
+        "Добавить товар"
+      ] })
+    ] }),
+    products.data.length > 0 ? /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("table", { className: "data-table", children: [
+      /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsxs("tr", { children: [
+        /* @__PURE__ */ jsx("th", { children: "#" }),
+        /* @__PURE__ */ jsx("th", { children: "SKU" }),
+        /* @__PURE__ */ jsx("th", { children: "Наименование" }),
+        /* @__PURE__ */ jsx("th", { children: "Категория" }),
+        /* @__PURE__ */ jsx("th", { children: "Наличие" }),
+        /* @__PURE__ */ jsx("th", { children: "Себестоимость" }),
+        /* @__PURE__ */ jsx("th", { children: "Действия" })
+      ] }) }),
+      /* @__PURE__ */ jsx("tbody", { children: products.data.map((product) => /* @__PURE__ */ jsxs("tr", { children: [
+        /* @__PURE__ */ jsx("td", { className: "td-id", children: product.id }),
+        /* @__PURE__ */ jsx("td", { className: "td-sku", children: product.sku }),
+        /* @__PURE__ */ jsx("td", { className: "td-name", children: product.name }),
+        /* @__PURE__ */ jsx("td", { className: "td-category", children: product.category?.name ?? "Нет категории" }),
+        /* @__PURE__ */ jsx("td", { children: /* @__PURE__ */ jsx(
+          "span",
+          {
+            className: `badge ${product.stock > 0 ? "badge-green" : "badge-red"}`,
+            children: product.stock > 0 ? `${product.stock} шт.` : "Нет в наличии"
+          }
+        ) }),
+        /* @__PURE__ */ jsxs("td", { className: "td-price", children: [
+          product.price,
+          " ₽"
+        ] }),
+        /* @__PURE__ */ jsx("td", { children: /* @__PURE__ */ jsxs("div", { className: "actions", children: [
+          /* @__PURE__ */ jsx(
+            Link_default,
+            {
+              href: `/admin/products/${product.id}/edit`,
+              className: "btn-edit",
+              children: /* @__PURE__ */ jsx(Pencil, { size: 14 })
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: () => handleDelete(product.id),
+              className: "btn-delete",
+              children: /* @__PURE__ */ jsx(Trash2, { size: 14 })
+            }
+          )
+        ] }) })
+      ] }, product.id)) })
+    ] }) }) : /* @__PURE__ */ jsx("div", { className: "table-empty", children: "Товаров пока нет" }),
+    products.links && /* @__PURE__ */ jsx("div", { className: "pagination", children: products.links.map((link, i) => /* @__PURE__ */ jsx(
+      Link_default,
+      {
+        href: link.url ?? "#",
+        className: `page-link ${link.active ? "active" : link.url ? "available" : "disabled"}`,
+        dangerouslySetInnerHTML: { __html: link.label }
+      },
+      i
+    )) })
+  ] }) });
+}
+const __vite_glob_0_10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Index$1
+}, Symbol.toStringTag, { value: "Module" }));
+function CardImage({ cards }) {
+  return /* @__PURE__ */ jsx("div", { className: "card-item", children: /* @__PURE__ */ jsxs(Link_default, { href: `/catalog/${cards.product.slug}`, children: [
+    /* @__PURE__ */ jsx("div", { className: "card-image", children: /* @__PURE__ */ jsx(
+      "img",
+      {
+        src: cards.product.image_url,
+        alt: cards.name
+      }
+    ) }),
+    /* @__PURE__ */ jsxs("div", { className: "van-card-body", children: [
+      /* @__PURE__ */ jsxs("div", { className: "card-price", children: [
+        /* @__PURE__ */ jsxs("span", { className: "price-current", children: [
+          cards.price,
+          " ₽"
+        ] }),
+        cards.old_price && /* @__PURE__ */ jsxs("span", { className: "price-old", children: [
+          cards.old_price,
+          " ₽"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx("h3", { className: "card-title", children: cards.name })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "card-actions", children: [
+      /* @__PURE__ */ jsxs("button", { className: "btn-cart", children: [
+        /* @__PURE__ */ jsx(ShoppingCart, {}),
+        " Корзина"
+      ] }),
+      /* @__PURE__ */ jsx("button", { className: "btn-favorite", children: /* @__PURE__ */ jsx(Heart, {}) })
+    ] })
+  ] }) });
+}
+function Index({ cards }) {
+  return /* @__PURE__ */ jsx("main", { children: cards.data.length > 0 ? /* @__PURE__ */ jsx("div", { className: "card-wrapper card-flex", children: /* @__PURE__ */ jsx("div", { className: "card-layout", children: cards.data.map((cards2) => /* @__PURE__ */ jsx(CardImage, { cards: cards2 }, cards2.id)) }) }) : /* @__PURE__ */ jsx("div", { className: "px-6 py-12 text-center text-gray-400 text-sm", children: "Товаров пока нет" }) });
+}
+const __vite_glob_0_11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Index
+}, Symbol.toStringTag, { value: "Module" }));
+const __vite_glob_0_12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null
+}, Symbol.toStringTag, { value: "Module" }));
+function Test({ message }) {
+  const [count, setCount] = useState(0);
+  return /* @__PURE__ */ jsxs("div", { style: { padding: "60px", backgroundColor: "#f8f9fa", minHeight: "100vh" }, children: [
+    /* @__PURE__ */ jsx("h1", { style: { color: "#dc3545", fontSize: "3.5rem" }, children: "ТЕСТ РАБОТАЕТ!" }),
+    /* @__PURE__ */ jsx("h1", { style: { color: "#dc3545", fontSize: "3.5rem" }, children: "SSR ТЕСТ" }),
+    /* @__PURE__ */ jsxs("p", { style: { fontSize: "1.8rem" }, children: [
+      "Сообщение от Laravel: ",
+      message
+    ] }),
+    /* @__PURE__ */ jsxs("div", { style: { marginTop: "30px" }, children: [
+      /* @__PURE__ */ jsxs("p", { style: { fontSize: "1.5rem" }, children: [
+        "Счётчик: ",
+        count
+      ] }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: () => setCount(count + 1),
+          style: { padding: "15px 30px", fontSize: "1.2rem", backgroundColor: "#198754", color: "white", border: "none", borderRadius: "8px", cursor: "pointer" },
+          children: "+1"
+        }
+      )
+    ] })
+  ] });
+}
+const __vite_glob_0_13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Test
+}, Symbol.toStringTag, { value: "Module" }));
 createServer((page) => {
   return createInertiaApp({
     page,
     render: ReactDOMServer.renderToString,
     resolve: (name) => {
-      const pages = /* @__PURE__ */ Object.assign({ "./Pages/NotFound.jsx": __vite_glob_0_0, "./Pages/Test.jsx": __vite_glob_0_1 });
+      const pages = /* @__PURE__ */ Object.assign({ "./Pages/Admin/Cards/Create/Create.jsx": __vite_glob_0_0, "./Pages/Admin/Cards/Edit/Edit.jsx": __vite_glob_0_1, "./Pages/Admin/Cards/Index/Index.jsx": __vite_glob_0_2, "./Pages/Admin/Categories/Create/Create.jsx": __vite_glob_0_3, "./Pages/Admin/Categories/Edit/Edit.jsx": __vite_glob_0_4, "./Pages/Admin/Categories/Index/Index.jsx": __vite_glob_0_5, "./Pages/Admin/Layout/Layout.jsx": __vite_glob_0_6, "./Pages/Admin/Main/Main.jsx": __vite_glob_0_7, "./Pages/Admin/Products/Create/Create.jsx": __vite_glob_0_8, "./Pages/Admin/Products/Edit/Edit.jsx": __vite_glob_0_9, "./Pages/Admin/Products/Index/Index.jsx": __vite_glob_0_10, "./Pages/Client/Index.jsx": __vite_glob_0_11, "./Pages/NotFound.jsx": __vite_glob_0_12, "./Pages/Test.jsx": __vite_glob_0_13 });
       return pages[`./Pages/${name}.jsx`];
     },
     setup: ({ App: App2, props }) => /* @__PURE__ */ jsx(App2, { ...props })

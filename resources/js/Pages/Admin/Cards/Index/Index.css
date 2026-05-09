@@ -1,0 +1,213 @@
+/* Обёртка таблицы */
+.table-wrap {
+    background: white;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Шапка */
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+/* Кнопка добавить */
+.btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #125dff;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.btn-add:hover {
+    background: #1549e6;
+}
+
+/* Таблица */
+.data-table {
+    width: 100%;
+    font-size: 14px;
+    border-collapse: collapse;
+}
+
+.data-table thead tr {
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.data-table th {
+    padding: 12px 24px;
+    text-align: left;
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.data-table.td {
+    padding: 16px 24px;
+}
+
+.td-id { color: #9ca3af; }
+.td-sku { font-family: monospace; color: #4b5563; }
+.td-name { font-weight: 500; color: #1f2937; }
+.td-category { color: #4b5563; }
+.td-price { color: #4b5563; }
+.td-active {
+    padding: 0 !important;
+    margin: auto;
+    height: 75px;          /* делаем такую же высоту как у ячейки с фото */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.td-image {
+    padding: 6px !important;
+    margin: 0;
+    width: 56px;           /* фиксируем ширину ячейки */
+    min-width: 56px;       /* важно! */
+    max-width: 56px;
+    height: 75px;          /* высота строки под фото */
+    vertical-align: middle; /* центрирует по вертикали */
+    text-align: center;
+    line-height: 0;        /* убирает лишние отступы */
+}
+
+.product-img {
+    width: 56px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;        /* важно */
+    margin: 0 auto;        /* центрирование */
+}
+
+/* Бейдж наличия */
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-green {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge-red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Кнопки действий */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #2563eb;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.btn-edit:hover { background: #dbeafe; }
+
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #ef4444;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-delete:hover { background: #fee2e2; }
+
+/* Пустое состояние */
+.table-empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* Пагинация */
+.pagination {
+    display: flex;
+    gap: 4px;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.page-link {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.page-link.active {
+    background: #125dff;
+    color: white;
+}
+
+.page-link.available {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.page-link.available:hover {
+    background: #e5e7eb;
+}
+
+.page-link.disabled {
+    color: #d1d5db;
+    cursor: default;
+    pointer-events: none;
+}

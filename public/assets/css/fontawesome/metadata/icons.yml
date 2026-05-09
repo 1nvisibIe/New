@@ -334,7 +334,7 @@ address-card:
     - 6.6.0
     - 6.7.0
     - 7.0.0
-  label: Address Card
+  label: Address Cards
   search:
     terms:
       - about
@@ -12433,7 +12433,7 @@ credit-card:
     - 6.6.0
     - 6.7.0
     - 7.0.0
-  label: Credit Card
+  label: Credit Cards
   search:
     terms:
       - buy
@@ -24729,7 +24729,7 @@ id-card:
     - 6.6.0
     - 6.7.0
     - 7.0.0
-  label: Id Card
+  label: Id Cards
   search:
     terms:
       - contact
@@ -24764,7 +24764,7 @@ id-card-clip:
     - 6.6.0
     - 6.7.0
     - 7.0.0
-  label: Id Card Clip
+  label: Id Cards Clip
   search:
     terms:
       - contact
@@ -37076,7 +37076,7 @@ sd-card:
     - 6.6.0
     - 6.7.0
     - 7.0.0
-  label: Sd Card
+  label: Sd Cards
   search:
     terms:
       - image
@@ -38138,7 +38138,7 @@ sim-card:
     - 6.6.0
     - 6.7.0
     - 7.0.0
-  label: Sim Card
+  label: Sim Cards
   search:
     terms:
       - hard drive

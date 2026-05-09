@@ -2,6 +2,7 @@
 import { hydrateRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react';
 
+
 createInertiaApp({
     resolve: (name) => {
         const pages = import.meta.glob('./Pages/**/*.jsx', { eager: true });

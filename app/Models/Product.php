@@ -41,7 +41,8 @@ class Product extends Model
     {
         return $this->hasOne(Card::class,'product_id','id');
     }
-    public function getimage()
+    protected $appends = ['image_url'];
+    public function getImageUrlAttribute()
     {return $this->mainImage?->path
         ? asset("uploads/{$this->mainImage->path}")
         : asset('default.jpg');

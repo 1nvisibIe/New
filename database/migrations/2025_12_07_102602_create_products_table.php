@@ -22,11 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('stock')->default(0);
             $table->decimal('price', 12, 2);
 
-            $table->unsignedInteger('brand_id')->nullable();
-
             $table->timestamps();
-
-            $table->index('brand_id');
             $table->index('price');
         });
     }

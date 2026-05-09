@@ -428,7 +428,7 @@ address-card:
         style: solid
       - family: classic
         style: regular
-  label: Address Card
+  label: Address Cards
   search:
     terms:
       - about
@@ -14919,7 +14919,7 @@ credit-card:
         style: solid
       - family: classic
         style: regular
-  label: Credit Card
+  label: Credit Cards
   search:
     terms:
       - buy
@@ -29778,7 +29778,7 @@ id-card:
         style: solid
       - family: classic
         style: regular
-  label: Id Card
+  label: Id Cards
   search:
     terms:
       - contact
@@ -29817,7 +29817,7 @@ id-card-clip:
     pro:
       - family: classic
         style: solid
-  label: Id Card Clip
+  label: Id Cards Clip
   search:
     terms:
       - contact
@@ -44689,7 +44689,7 @@ sd-card:
     pro:
       - family: classic
         style: solid
-  label: Sd Card
+  label: Sd Cards
   search:
     terms:
       - image
@@ -45954,7 +45954,7 @@ sim-card:
     pro:
       - family: classic
         style: solid
-  label: Sim Card
+  label: Sim Cards
   search:
     terms:
       - hard drive

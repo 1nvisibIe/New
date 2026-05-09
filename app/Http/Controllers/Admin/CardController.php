@@ -9,6 +9,7 @@ use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class CardController extends Controller
 {
@@ -17,9 +18,9 @@ class CardController extends Controller
      */
     public function index()
     {
-        $cards = Card::with('product')->orderBy('id','desc')->paginate(3);
+        $cards = Card::with('product.mainImage')->orderBy('id','desc')->paginate(3);
 
-        return view('admin.cards.index', compact('cards'));
+        return Inertia::render('Admin/Cards/Index/Index', compact('cards'));
     }
 
     /**
@@ -29,7 +30,7 @@ class CardController extends Controller
     {
         $products = Product::whereDoesntHave('card')->get();
 
-        return view('admin.cards.create', compact( 'products'));
+        return Inertia::render('Admin/Cards/Create/Create', compact( 'products'));
     }
 
     /**
@@ -46,7 +47,7 @@ class CardController extends Controller
             'price'=>$request->price,
             'old_price'=>$request->old_price,
 
-            'is_active'=>$request->has('is_active'),
+            'is_active'=>$request->boolean('is_active'),
             'description'=>$request->description
 
         ]);
@@ -76,7 +77,7 @@ class CardController extends Controller
     {
         $cards = Card::find($id);
         $product = $cards->product;
-        return view('admin.cards.edit', compact('cards','product'));
+        return Inertia::render('Admin/Cards/Edit/Edit', compact('cards','product'));
 
     }
 
@@ -90,7 +91,7 @@ class CardController extends Controller
         $product = $cards->product;
         $cards->update([
             'name'=>$request->name,
-            'is_active'=>$request->has('is_active'),
+            'is_active'=>$request->boolean('is_active'),
             'price'=>$request->price,
             'old_price'=>$request->old_price,
             'description'=>$request->description

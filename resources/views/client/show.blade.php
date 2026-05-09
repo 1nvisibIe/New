@@ -19,7 +19,7 @@
     <div class="container ">
         <div class="row ">
             <div class="col-12 col-md-5 pe-0 ps-3 pb-3 paddiv d-flex justify-content-start align-items-center">
-                <img src="{{$card->product->getimage()}}" class="img-fluid rounded-4 razmerikompvkataloge" alt="">
+                <img src="{{$card->product->image_url}}" class="img-fluid rounded-4 razmerikompvkataloge" alt="">
             </div>
             <div class="col-12 col-md-7 d-flex flex-column justify-content-between  px-2">
                 <div>
