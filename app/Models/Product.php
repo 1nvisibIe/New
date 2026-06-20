@@ -29,13 +29,11 @@ class Product extends Model
 
     public function attributes():BelongsToMany
     {
-        return $this->belongsToMany(Attribute::class, 'product_attribute_values', 'product_id', 'attribute_id');
+        return $this->belongsToMany(Attribute::class, 'product_attribute_values', 'product_id', 'attribute_id')
+            ->withPivot('value', 'sort_order')->orderBy('sort_order');
     }
 
-    public function attributeValues():BelongsToMany
-    {
-        return $this->belongsToMany(AttributeValue::class, 'product_attribute_values', 'product_id', 'attribute_value_id');
-    }
+
 
     public function card(): HasOne
     {
@@ -48,3 +46,4 @@ class Product extends Model
         : asset('default.jpg');
     }
 }
+

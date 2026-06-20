@@ -3,32 +3,23 @@ import {useForm, Link} from '@inertiajs/react'
 import {useState} from 'react'
 import FormWrapper from '@/Components/Admin/FormWrapper/FormWrapper.jsx'
 import FormField from '@/Components/Admin/FormField/FormField.jsx'
+import ImageGallery from '@/Components/Admin/ImageGallery/ImageGallery.jsx'
+import ProductAttributeList from '@/Components/Admin/ProductAttributeList/ProductAttributeList.jsx'
 import './Edit.css'
 
-export default function Edit({cards, product}) {
+export default function Edit({cards, product, productImg, attributes}) {
     const {data, setData, put, processing, errors} = useForm({
         name: cards.name || '',
         price: cards.price || '',
         old_price: cards.old_price || '',
         stock: product.stock || '',
         is_active: cards.is_active || false,
-        mainImage: null,
         description: cards.description || '',
+        attributes:  attributes ?? [],
     })
-    const [preview, setPreview] = useState(cards.product.image_url)
     const handleSubmit = (e) => {
         e.preventDefault()
         put(`/admin/cards/${cards.id}`, {forceFormData: true})
-    }
-    const handleImage = (e) => {
-        const file = e.target.files[0]
-        if (!file) return
-
-        setData('mainImage', file)
-
-        // Создаём временный URL для превью
-        const url = URL.createObjectURL(file)
-        setPreview(url)
     }
 
     return (
@@ -92,35 +83,29 @@ export default function Edit({cards, product}) {
                     </div>
                 </FormField>
 
-                <div className="image-field">
-                    <label className="form-label">Изображение</label>
-                    <div className="image-field-inner">
-                        <input
-                            type="file"
-                            id="mainImage"
-                            className="file-input"
-                            onChange={handleImage}
-                        />
-                        <label htmlFor="mainImage" className="file-label">
-                            Выберите изображение
-                        </label>
+                <ImageGallery
+                    productId={productImg.id}
+                    initialImages={productImg.images.map(img => ({
+                        id: img.id,
+                        url: img.url,          // image_url accessor
+                        is_main: img.is_main,
+                        sort_order: img.sort_order,
+                        type: img.type ?? 'image', // если есть поле type
+                    }))}
+                />
 
-                        <div className="image-preview">
-                            <img
-                                src={preview}
-                                alt="Фото товара"
-                                className="preview-img"
-                            />
-                        </div>
-                    </div>
-                </div>
+                {/* Атрибуты товара */}
+                <ProductAttributeList
+                    attributes={data.attributes}
+                    onChange={attrs => setData('attributes', attrs)}
+                />
 
                 <FormField label="Описание" id="description" error={errors.description}>
                     <input
                         id="description"
                         type="text"
                         value={data.description}
-                        onChange={e => setData('price', e.target.value)}
+                        onChange={e => setData('description', e.target.value)}
                         className={`form-input ${errors.description ? 'error' : ''}`}
                     />
                 </FormField>

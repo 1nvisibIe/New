@@ -2,12 +2,16 @@ import Layout from '@/Pages/Admin/Layout/Layout.jsx'
 import { useForm, Link } from '@inertiajs/react'
 import FormWrapper from '@/Components/Admin/FormWrapper/FormWrapper.jsx'
 import FormField from '@/Components/Admin/FormField/FormField.jsx'
-
+import AttributeList from '@/Components/Admin/AttributeList/AttributeList.jsx'
 export default function Edit({category ,categories }) {
     const { data, setData, put, processing, errors } = useForm({
         name: category.name || '',
-        parent: category.parent_id || ''
+        parent: category.parent_id || '',
 
+        attributes: category.attributes?.map(attr => ({
+            id:   attr.id,
+            name: attr.name,
+        })) ?? [],
     })
 
     const handleSubmit = (e) => {
@@ -50,6 +54,10 @@ export default function Edit({category ,categories }) {
                     </select>
                 </FormField>
 
+                <AttributeList
+                    attributes={data.attributes}
+                    onChange={attrs => setData('attributes', attrs)}
+                />
             </FormWrapper>
         </Layout>
     )

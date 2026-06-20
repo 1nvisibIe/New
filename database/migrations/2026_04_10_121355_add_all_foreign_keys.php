@@ -38,21 +38,14 @@ return new class extends Migration
                 ->onUpdate('cascade');
         });
 
-        // 4. Attribute Values → Attributes
-        Schema::table('attribute_values', function (Blueprint $table) {
-            $table->foreign('attribute_id', 'fk_attribute_values_attribute_id')
-                ->references('id')
-                ->on('attributes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-        });
+
 
         // 5. Categories (self-reference) → Categories (parent_id)
         Schema::table('categories', function (Blueprint $table) {
             $table->foreign('parent_id', 'fk_categories_parent_id')
                 ->references('id')
                 ->on('categories')
-                ->onDelete('cascade')        // или 'set null', если хочешь
+                ->onDelete('set null')        // или 'set null', если хочешь
                 ->onUpdate('cascade')
                 ->nullable();
         });
@@ -71,11 +64,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreign('attribute_value_id', 'fk_pav_attribute_value_id')
-                ->references('id')
-                ->on('attribute_values')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+
         });
 
         // 7. Pivot: category_attribute

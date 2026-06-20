@@ -51,6 +51,13 @@ Route::group(['prefix'=>'admin','middleware' => ['Admin']],function(){
     Route::resource('/categories',CategoryController::class);
     Route::resource('/products',ProductController::class);
     Route::resource('/cards',CardController::class);
+
+
+    Route::post('/products/{id}/images', [CardController::class, 'uploadImages']);
+    Route::delete('/images/{imageId}', [CardController::class, 'deleteImage']);
+    Route::put('/products/{id}/images/order', [CardController::class, 'updateImageOrder']);
+
+
 });
 
 

@@ -1,8 +1,7 @@
-// resources/js/Pages/Admin/Products/Create.jsx
+
 import Layout from '@/Pages/Admin/Layout/Layout.jsx'
 import {useForm} from '@inertiajs/react'
 import {Link} from '@inertiajs/react'
-import {ChevronRight} from 'lucide-react'
 import FormField from "@/Components/Admin/FormField/FormField.jsx";
 import FormWrapper from "@/Components/Admin/FormWrapper/FormWrapper.jsx";
 export default function Create({categories}) {

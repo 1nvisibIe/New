@@ -35,8 +35,10 @@ const menuItems = [
     },
 ]
 
+
 export default function Layout({ children, title }) {
-    const { url } = usePage()
+    const { url,props } = usePage()
+    const flash = props.flash
     const [openGroups, setOpenGroups] = useState(() => {
         try {
             const saved = localStorage.getItem('adminOpenGroups')
@@ -66,7 +68,13 @@ export default function Layout({ children, title }) {
 
     return (
         <div className="admin-wrapper">
-
+            {/* Flash сообщения */}
+            {flash?.success && (
+                <div className="flash flash-success">{flash.success}</div>
+            )}
+            {flash?.error && (
+                <div className="flash flash-error">{flash.error}</div>
+            )}
             {/* Sidebar */}
             <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
 

@@ -1,0 +1,71 @@
+/* AttributeList.css */
+.attribute-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.attribute-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-add-attribute {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-add-attribute:hover {
+    background: #dbeafe;
+}
+
+.attribute-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.attribute-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.attribute-field .form-input {
+    flex: 1;  /* занимает всё доступное место */
+}
+
+.btn-remove-attribute {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    flex-shrink: 0;  /* не сжимается */
+}
+
+.btn-remove-attribute:hover {
+    background: #fee2e2;
+}
+
+.attribute-empty {
+    font-size: 13px;
+    color: #9ca3af;
+    margin: 0;
+}

@@ -1,0 +1,27 @@
+.show-card {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+.show-card-gallery {
+    flex: 0 0 56%;
+    max-width: 56%;
+}
+
+.show-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    .show-card {
+        flex-direction: column;
+    }
+
+    .show-card-gallery {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+    }
+}

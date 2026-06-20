@@ -15,10 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('name', 100);
             $table->string('slug', 120)->unique();
-            $table->string('type', 50)->default('select');
-            $table->string('unit', 30)->nullable();
-            $table->boolean('is_filterable')->default(1);
-            $table->unsignedSmallInteger('sort_order')->default(0);
+
             $table->timestamps();
         });
     }

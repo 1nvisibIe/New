@@ -1,0 +1,55 @@
+/* Общие стили для кнопок в шапке: Корзина / Избранное */
+.header-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    width: 80px;
+    height: 56px;
+    padding: 0 12px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.header-action-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.header-action-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-action-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.header-action-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: #639922;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    line-height: 1;
+}

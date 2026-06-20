@@ -1,9 +1,11 @@
 import {Link, router} from '@inertiajs/react'
-import {CardImage} from "@/Components/Client/CardImage.jsx";
+import {CardImage} from "@/Components/Client/CardImage/CardImage.jsx";
+import Layout from "../Layout/Layout.jsx"
 import "./Index.css"
 
 export default function Index({cards}) {
     return (
+        <Layout>
         <main>
             {cards.data.length > 0 ? (
                 <div className={"card-wrapper card-flex"}>
@@ -17,8 +19,11 @@ export default function Index({cards}) {
                     Товаров пока нет
                 </div>
             )}
+            <div>
 
+            </div>
         </main>
+            </ Layout>
     )
 
 }

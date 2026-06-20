@@ -4,7 +4,7 @@ import React2, { createContext, forwardRef, useRef, useMemo, useState, useEffect
 import { flushSync } from "react-dom";
 import { cloneDeep, isEqual, set, has, get } from "lodash-es";
 import { createValidator, toSimpleValidationErrors, resolveName } from "laravel-precognition";
-import { LayoutDashboard, Package, Tag, CreditCard, ChevronDown, Menu, Plus, Check, X, Pencil, Trash2, ShoppingCart, Heart } from "lucide-react";
+import { LayoutDashboard, Package, Tag, CreditCard, ChevronDown, Menu, GripVertical, Star, Trash2, Plus, X, Check, Pencil, ShoppingCart, Minus, Heart } from "lucide-react";
 import createServer from "@inertiajs/core/server";
 import ReactDOMServer from "react-dom/server";
 var headContext = createContext(null);
@@ -1267,7 +1267,8 @@ const menuItems = [
   }
 ];
 function Layout({ children, title }) {
-  const { url } = usePage();
+  const { url, props } = usePage();
+  const flash = props.flash;
   const [openGroups, setOpenGroups] = useState(() => {
     try {
       const saved = localStorage.getItem("adminOpenGroups");
@@ -1288,6 +1289,8 @@ function Layout({ children, title }) {
   const isChildActive = (href) => url === href;
   const isGroupActive = (children2) => children2.some((c) => isChildActive(c.href));
   return /* @__PURE__ */ jsxs("div", { className: "admin-wrapper", children: [
+    flash?.success && /* @__PURE__ */ jsx("div", { className: "flash flash-success", children: flash.success }),
+    flash?.error && /* @__PURE__ */ jsx("div", { className: "flash flash-error", children: flash.error }),
     /* @__PURE__ */ jsxs("aside", { className: `sidebar ${sidebarOpen ? "open" : "closed"}`, children: [
       /* @__PURE__ */ jsx("div", { className: "sidebar-logo", children: /* @__PURE__ */ jsx("span", { children: "ЗОЛУШКАМ.NET" }) }),
       /* @__PURE__ */ jsx("nav", { className: "sidebar-nav", children: menuItems.map((item) => {
@@ -1393,7 +1396,7 @@ function Create$2({ products }) {
     mainImage: "",
     description: ""
   });
-  const [preview, setPreview] = useState(products.image_url);
+  const [preview, setPreview] = useState("/default.jpg");
   const handleSubmit = (e) => {
     e.preventDefault();
     post("/admin/cards", { forceFormData: true });
@@ -1512,27 +1515,309 @@ const __vite_glob_0_0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.def
   __proto__: null,
   default: Create$2
 }, Symbol.toStringTag, { value: "Module" }));
-function Edit$2({ cards, product }) {
+function ImageGallery({ productId, initialImages = [] }) {
+  const [images, setImages] = useState(initialImages);
+  const [uploading, setUploading] = useState(false);
+  const [previews, setPreviews] = useState([]);
+  const dragItem = useRef(null);
+  const dragOverItem = useRef(null);
+  const getCsrf = () => document.querySelector('meta[name="csrf-token"]')?.content;
+  const handleFileSelect = async (files) => {
+    const fileArray = Array.from(files);
+    const valid = fileArray.filter(
+      (f) => f.type.startsWith("image/") || f.type.startsWith("video/")
+    );
+    if (valid.length === 0) return;
+    const newPreviews = valid.map((file) => ({
+      id: `temp_${Date.now()}_${Math.random()}`,
+      // временный уникальный id
+      file,
+      // URL.createObjectURL — создаёт временный blob URL для превью
+      preview: URL.createObjectURL(file),
+      type: file.type.startsWith("video/") ? "video" : "image"
+    }));
+    setPreviews((prev) => [...prev, ...newPreviews]);
+    await uploadFiles(valid);
+  };
+  const uploadFiles = async (files) => {
+    setUploading(true);
+    const formData = new FormData();
+    files.forEach((file) => formData.append("images[]", file));
+    try {
+      const response = await fetch(`/admin/products/${productId}/images`, {
+        method: "POST",
+        headers: {
+          "X-CSRF-TOKEN": getCsrf()
+        },
+        body: formData
+      });
+      const uploaded = await response.json();
+      setImages((prev) => [...prev, ...uploaded]);
+      setPreviews([]);
+    } catch (error) {
+      console.error("Ошибка загрузки:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
+  const handleDelete = async (imageId) => {
+    if (!confirm("Удалить изображение?")) return;
+    try {
+      await fetch(`/admin/images/${imageId}`, {
+        method: "DELETE",
+        headers: {
+          "X-CSRF-TOKEN": getCsrf(),
+          "Content-Type": "application/json"
+        }
+      });
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
+    } catch (error) {
+      console.error("Ошибка удаления:", error);
+    }
+  };
+  const handleSetMain = async (imageId) => {
+    const updated = images.map((img) => ({
+      ...img,
+      is_main: img.id === imageId
+      // true только у выбранного
+    }));
+    setImages(updated);
+    await saveOrder(updated);
+  };
+  const handleDragStart = (e, index) => {
+    dragItem.current = index;
+    e.dataTransfer.effectAllowed = "move";
+  };
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    dragOverItem.current = index;
+  };
+  const handleDrop = async () => {
+    const from = dragItem.current;
+    const to = dragOverItem.current;
+    if (from === to) return;
+    const reordered = [...images];
+    const [moved] = reordered.splice(from, 1);
+    reordered.splice(to, 0, moved);
+    const withOrder = reordered.map((img, index) => ({
+      ...img,
+      sort_order: index + 1
+    }));
+    setImages(withOrder);
+    dragItem.current = null;
+    dragOverItem.current = null;
+    await saveOrder(withOrder);
+  };
+  const saveOrder = async (imgs) => {
+    await fetch(`/admin/products/${productId}/images/order`, {
+      method: "PUT",
+      headers: {
+        "X-CSRF-TOKEN": getCsrf(),
+        "Content-Type": "application/json"
+      },
+      // JSON.stringify — конвертирует объект в JSON строку
+      body: JSON.stringify({
+        images: imgs.map((img) => ({
+          id: img.id,
+          sort_order: img.sort_order,
+          is_main: img.is_main
+        }))
+      })
+    });
+  };
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.add("drag-over");
+  };
+  const handleDragLeave = (e) => {
+    e.currentTarget.classList.remove("drag-over");
+  };
+  const handleDropZone = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove("drag-over");
+    handleFileSelect(e.dataTransfer.files);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "gallery", children: [
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "upload-zone",
+        onDragEnter: handleDragEnter,
+        onDragOver: (e) => e.preventDefault(),
+        onDragLeave: handleDragLeave,
+        onDrop: handleDropZone,
+        onClick: () => document.getElementById("gallery-input").click(),
+        children: [
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              id: "gallery-input",
+              type: "file",
+              multiple: true,
+              accept: "image/*,video/*",
+              className: "gallery-input-hidden",
+              onChange: (e) => handleFileSelect(e.target.files)
+            }
+          ),
+          uploading ? /* @__PURE__ */ jsx("p", { className: "upload-hint", children: "Загрузка..." }) : /* @__PURE__ */ jsxs(Fragment$1, { children: [
+            /* @__PURE__ */ jsx("p", { className: "upload-icon", children: "📁" }),
+            /* @__PURE__ */ jsx("p", { className: "upload-hint", children: "Перетащите файлы или нажмите для выбора" }),
+            /* @__PURE__ */ jsx("p", { className: "upload-sub", children: "до 20 файлов, фото и видео" })
+          ] })
+        ]
+      }
+    ),
+    previews.length > 0 && /* @__PURE__ */ jsx("div", { className: "previews-uploading", children: previews.map((p) => /* @__PURE__ */ jsxs("div", { className: "preview-uploading", children: [
+      p.type === "video" ? /* @__PURE__ */ jsx("video", { src: p.preview, className: "preview-media" }) : /* @__PURE__ */ jsx("img", { src: p.preview, className: "preview-media", alt: "" }),
+      /* @__PURE__ */ jsx("div", { className: "preview-uploading-overlay", children: /* @__PURE__ */ jsx("span", { children: "Загрузка..." }) })
+    ] }, p.id)) }),
+    images.length > 0 && /* @__PURE__ */ jsx("div", { className: "gallery-grid", children: images.map((image, index) => /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: `gallery-item ${image.is_main ? "is-main" : ""}`,
+        draggable: true,
+        onDragStart: (e) => handleDragStart(e, index),
+        onDragOver: (e) => handleDragOver(e, index),
+        onDrop: handleDrop,
+        children: [
+          image.type === "video" ? /* @__PURE__ */ jsx(
+            "video",
+            {
+              src: image.url,
+              className: "gallery-media",
+              preload: "metadata"
+            }
+          ) : /* @__PURE__ */ jsx(
+            "img",
+            {
+              src: image.url,
+              alt: "",
+              className: "gallery-media"
+            }
+          ),
+          /* @__PURE__ */ jsxs("div", { className: "gallery-overlay", children: [
+            /* @__PURE__ */ jsx("div", { className: "gallery-drag-handle", children: /* @__PURE__ */ jsx(GripVertical, { size: 20 }) }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                className: `gallery-btn btn-main ${image.is_main ? "active" : ""}`,
+                onClick: () => handleSetMain(image.id),
+                title: "Сделать главным",
+                children: /* @__PURE__ */ jsx(Star, { size: 16 })
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                className: "gallery-btn btn-delete",
+                onClick: () => handleDelete(image.id),
+                title: "Удалить",
+                children: /* @__PURE__ */ jsx(Trash2, { size: 16 })
+              }
+            )
+          ] }),
+          image.is_main && /* @__PURE__ */ jsx("span", { className: "main-badge", children: "Главное" }),
+          /* @__PURE__ */ jsx("span", { className: "sort-badge", children: index + 1 })
+        ]
+      },
+      image.id
+    )) }),
+    images.length === 0 && previews.length === 0 && /* @__PURE__ */ jsx("p", { className: "gallery-empty", children: "Изображений пока нет" })
+  ] });
+}
+function ProductAttributeList({ attributes, onChange }) {
+  const handleAdd = () => {
+    onChange([
+      ...attributes,
+      { attribute_id: null, name: "", value: "", from_category: false }
+    ]);
+  };
+  const handleNameChange = (index, value) => {
+    const updated = attributes.map(
+      (attr, i) => i === index ? { ...attr, name: value } : attr
+    );
+    onChange(updated);
+  };
+  const handleValueChange = (index, value) => {
+    const updated = attributes.map(
+      (attr, i) => i === index ? { ...attr, value } : attr
+    );
+    onChange(updated);
+  };
+  const handleRemove = (index) => {
+    const updated = attributes.filter((_, i) => i !== index);
+    onChange(updated);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "product-attribute-list", children: [
+    /* @__PURE__ */ jsxs("div", { className: "attribute-list-header", children: [
+      /* @__PURE__ */ jsx("label", { className: "form-label", children: "Характеристики" }),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: handleAdd,
+          className: "btn-add-attribute",
+          children: [
+            /* @__PURE__ */ jsx(Plus, { size: 14 }),
+            "Добавить характеристику"
+          ]
+        }
+      )
+    ] }),
+    attributes.length === 0 && /* @__PURE__ */ jsx("p", { className: "attribute-empty", children: "Характеристик пока нет" }),
+    /* @__PURE__ */ jsx("div", { className: "attribute-fields", children: attributes.map((attr, index) => /* @__PURE__ */ jsxs("div", { className: "product-attribute-field", children: [
+      /* @__PURE__ */ jsx(
+        "input",
+        {
+          type: "text",
+          value: attr.name,
+          onChange: (e) => handleNameChange(index, e.target.value),
+          placeholder: "Название",
+          className: "form-input",
+          readOnly: attr.from_category
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        "input",
+        {
+          type: "text",
+          value: attr.value,
+          onChange: (e) => handleValueChange(index, e.target.value),
+          placeholder: "Значение",
+          className: "form-input"
+        }
+      ),
+      !attr.from_category ? /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => handleRemove(index),
+          className: "btn-remove-attribute",
+          title: "Удалить",
+          children: /* @__PURE__ */ jsx(X, { size: 16 })
+        }
+      ) : (
+        // Заглушка для выравнивания
+        /* @__PURE__ */ jsx("div", { className: "btn-placeholder" })
+      )
+    ] }, index)) })
+  ] });
+}
+function Edit$2({ cards, product, productImg, attributes }) {
   const { data, setData, put, processing, errors } = useForm({
     name: cards.name || "",
     price: cards.price || "",
     old_price: cards.old_price || "",
     stock: product.stock || "",
     is_active: cards.is_active || false,
-    mainImage: cards.mainImage || "",
-    description: cards.description || ""
+    description: cards.description || "",
+    attributes: attributes ?? []
   });
-  const [preview, setPreview] = useState(cards.product.image_url);
   const handleSubmit = (e) => {
     e.preventDefault();
     put(`/admin/cards/${cards.id}`, { forceFormData: true });
-  };
-  const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setData("mainImage", file);
-    const url = URL.createObjectURL(file);
-    setPreview(url);
   };
   return /* @__PURE__ */ jsx(Layout, { title: "Редактирование карточки", children: /* @__PURE__ */ jsxs(
     FormWrapper,
@@ -1593,36 +1878,35 @@ function Edit$2({ cards, product }) {
             onChange: (e) => setData("is_active", e.target.checked)
           }
         ) }) }),
-        /* @__PURE__ */ jsxs("div", { className: "image-field", children: [
-          /* @__PURE__ */ jsx("label", { className: "form-label", children: "Изображение" }),
-          /* @__PURE__ */ jsxs("div", { className: "image-field-inner", children: [
-            /* @__PURE__ */ jsx(
-              "input",
-              {
-                type: "file",
-                id: "mainImage",
-                className: "file-input",
-                onChange: handleImage
-              }
-            ),
-            /* @__PURE__ */ jsx("label", { htmlFor: "mainImage", className: "file-label", children: "Выберите изображение" }),
-            /* @__PURE__ */ jsx("div", { className: "image-preview", children: /* @__PURE__ */ jsx(
-              "img",
-              {
-                src: preview,
-                alt: "Фото товара",
-                className: "preview-img"
-              }
-            ) })
-          ] })
-        ] }),
+        /* @__PURE__ */ jsx(
+          ImageGallery,
+          {
+            productId: productImg.id,
+            initialImages: productImg.images.map((img) => ({
+              id: img.id,
+              url: img.url,
+              // image_url accessor
+              is_main: img.is_main,
+              sort_order: img.sort_order,
+              type: img.type ?? "image"
+              // если есть поле type
+            }))
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          ProductAttributeList,
+          {
+            attributes: data.attributes,
+            onChange: (attrs) => setData("attributes", attrs)
+          }
+        ),
         /* @__PURE__ */ jsx(FormField, { label: "Описание", id: "description", error: errors.description, children: /* @__PURE__ */ jsx(
           "input",
           {
             id: "description",
             type: "text",
             value: data.description,
-            onChange: (e) => setData("price", e.target.value),
+            onChange: (e) => setData("description", e.target.value),
             className: `form-input ${errors.description ? "error" : ""}`
           }
         ) })
@@ -1718,10 +2002,70 @@ const __vite_glob_0_2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.def
   __proto__: null,
   default: Index$3
 }, Symbol.toStringTag, { value: "Module" }));
+function AttributeList({ attributes, onChange }) {
+  const handleAdd = () => {
+    onChange([
+      ...attributes,
+      { id: null, name: "" }
+      // новый пустой атрибут
+    ]);
+  };
+  const handleChange = (index, value) => {
+    const updated = attributes.map(
+      (attr, i) => i === index ? { ...attr, name: value } : attr
+    );
+    onChange(updated);
+  };
+  const handleRemove = (index) => {
+    const updated = attributes.filter((_, i) => i !== index);
+    onChange(updated);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "attribute-list", children: [
+    /* @__PURE__ */ jsxs("div", { className: "attribute-list-header", children: [
+      /* @__PURE__ */ jsx("label", { className: "form-label", children: "Характеристики" }),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: handleAdd,
+          className: "btn-add-attribute",
+          children: [
+            /* @__PURE__ */ jsx(Plus, { size: 14 }),
+            "Добавить характеристику"
+          ]
+        }
+      )
+    ] }),
+    attributes.length === 0 && /* @__PURE__ */ jsx("p", { className: "attribute-empty", children: "Характеристик пока нет" }),
+    /* @__PURE__ */ jsx("div", { className: "attribute-fields", children: attributes.map((attr, index) => /* @__PURE__ */ jsxs("div", { className: "attribute-field", children: [
+      /* @__PURE__ */ jsx(
+        "input",
+        {
+          type: "text",
+          value: attr.name,
+          onChange: (e) => handleChange(index, e.target.value),
+          placeholder: "Название характеристики",
+          className: "form-input"
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => handleRemove(index),
+          className: "btn-remove-attribute",
+          title: "Удалить",
+          children: /* @__PURE__ */ jsx(X, { size: 16 })
+        }
+      )
+    ] }, index)) })
+  ] });
+}
 function Create$1({ categories }) {
   const { data, setData, post, processing, errors } = useForm({
     name: "",
-    parent: ""
+    parent: "",
+    attributes: []
   });
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -1760,7 +2104,14 @@ function Create$1({ categories }) {
               categories.map((cat) => /* @__PURE__ */ jsx("option", { value: cat.id, children: cat.name }, cat.id))
             ]
           }
-        ) })
+        ) }),
+        /* @__PURE__ */ jsx(
+          AttributeList,
+          {
+            attributes: data.attributes,
+            onChange: (attrs) => setData("attributes", attrs)
+          }
+        )
       ]
     }
   ) });
@@ -1772,7 +2123,11 @@ const __vite_glob_0_3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.def
 function Edit$1({ category, categories }) {
   const { data, setData, put, processing, errors } = useForm({
     name: category.name || "",
-    parent: category.parent_id || ""
+    parent: category.parent_id || "",
+    attributes: category.attributes?.map((attr) => ({
+      id: attr.id,
+      name: attr.name
+    })) ?? []
   });
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -1809,7 +2164,14 @@ function Edit$1({ category, categories }) {
               categories.map((cat) => /* @__PURE__ */ jsx("option", { value: cat.id, children: cat.name }, cat.id))
             ]
           }
-        ) })
+        ) }),
+        /* @__PURE__ */ jsx(
+          AttributeList,
+          {
+            attributes: data.attributes,
+            onChange: (attrs) => setData("attributes", attrs)
+          }
+        )
       ]
     }
   ) });
@@ -2127,7 +2489,60 @@ const __vite_glob_0_10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.de
   __proto__: null,
   default: Index$1
 }, Symbol.toStringTag, { value: "Module" }));
+const CART_KEY = "cart";
+const FAV_KEY = "favorites";
+function readCart() {
+  try {
+    return JSON.parse(localStorage.getItem(CART_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+function readFavorites() {
+  try {
+    return JSON.parse(localStorage.getItem(FAV_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
 function CardImage({ cards }) {
+  const [qty, setQty] = useState(() => readCart()[cards.id] || 0);
+  const [isFav, setIsFav] = useState(() => readFavorites().includes(cards.id));
+  const updateCart = (newQty) => {
+    const cart = readCart();
+    if (newQty <= 0) {
+      delete cart[cards.id];
+    } else {
+      cart[cards.id] = newQty;
+    }
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    window.dispatchEvent(new Event("cart-updated"));
+    setQty(newQty);
+  };
+  const handleAdd = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    updateCart(qty + 1);
+  };
+  const handleInc = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    updateCart(qty + 1);
+  };
+  const handleDec = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    updateCart(Math.max(0, qty - 1));
+  };
+  const handleFav = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const favs = readFavorites();
+    const next = isFav ? favs.filter((id) => id !== cards.id) : [...favs, cards.id];
+    localStorage.setItem(FAV_KEY, JSON.stringify(next));
+    window.dispatchEvent(new Event("favorites-updated"));
+    setIsFav(!isFav);
+  };
   return /* @__PURE__ */ jsx("div", { className: "card-item", children: /* @__PURE__ */ jsxs(Link_default, { href: `/catalog/${cards.product.slug}`, children: [
     /* @__PURE__ */ jsx("div", { className: "card-image", children: /* @__PURE__ */ jsx(
       "img",
@@ -2150,16 +2565,31 @@ function CardImage({ cards }) {
       /* @__PURE__ */ jsx("h3", { className: "card-title", children: cards.name })
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "card-actions", children: [
-      /* @__PURE__ */ jsxs("button", { className: "btn-cart", children: [
+      qty === 0 ? /* @__PURE__ */ jsxs("button", { className: "btn-cart", onClick: handleAdd, children: [
         /* @__PURE__ */ jsx(ShoppingCart, {}),
-        " Корзина"
+        "  В корзину"
+      ] }) : /* @__PURE__ */ jsxs("div", { className: "btn-cart btn-cart--counter", children: [
+        /* @__PURE__ */ jsx("button", { className: "cnt-btn", onClick: handleDec, "aria-label": "Уменьшить", children: /* @__PURE__ */ jsx(Minus, { size: 14 }) }),
+        /* @__PURE__ */ jsx("span", { className: "cnt-num", children: qty }),
+        /* @__PURE__ */ jsx("button", { className: "cnt-btn", onClick: handleInc, "aria-label": "Увеличить", children: /* @__PURE__ */ jsx(Plus, { size: 14 }) })
       ] }),
-      /* @__PURE__ */ jsx("button", { className: "btn-favorite", children: /* @__PURE__ */ jsx(Heart, {}) })
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          className: `btn-favorite ${isFav ? "btn-favorite--active" : ""}`,
+          onClick: handleFav,
+          "aria-label": "В избранное",
+          children: /* @__PURE__ */ jsx(Heart, { size: 15, fill: isFav ? "currentColor" : "none" })
+        }
+      )
     ] })
   ] }) });
 }
 function Index({ cards }) {
-  return /* @__PURE__ */ jsx("main", { children: cards.data.length > 0 ? /* @__PURE__ */ jsx("div", { className: "card-wrapper card-flex", children: /* @__PURE__ */ jsx("div", { className: "card-layout", children: cards.data.map((cards2) => /* @__PURE__ */ jsx(CardImage, { cards: cards2 }, cards2.id)) }) }) : /* @__PURE__ */ jsx("div", { className: "px-6 py-12 text-center text-gray-400 text-sm", children: "Товаров пока нет" }) });
+  return /* @__PURE__ */ jsxs("main", { children: [
+    cards.data.length > 0 ? /* @__PURE__ */ jsx("div", { className: "card-wrapper card-flex", children: /* @__PURE__ */ jsx("div", { className: "card-layout", children: cards.data.map((cards2) => /* @__PURE__ */ jsx(CardImage, { cards: cards2 }, cards2.id)) }) }) : /* @__PURE__ */ jsx("div", { className: "px-6 py-12 text-center text-gray-400 text-sm", children: "Товаров пока нет" }),
+    /* @__PURE__ */ jsx("div", {})
+  ] });
 }
 const __vite_glob_0_11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
@@ -2202,7 +2632,7 @@ createServer((page) => {
     page,
     render: ReactDOMServer.renderToString,
     resolve: (name) => {
-      const pages = /* @__PURE__ */ Object.assign({ "./Pages/Admin/Cards/Create/Create.jsx": __vite_glob_0_0, "./Pages/Admin/Cards/Edit/Edit.jsx": __vite_glob_0_1, "./Pages/Admin/Cards/Index/Index.jsx": __vite_glob_0_2, "./Pages/Admin/Categories/Create/Create.jsx": __vite_glob_0_3, "./Pages/Admin/Categories/Edit/Edit.jsx": __vite_glob_0_4, "./Pages/Admin/Categories/Index/Index.jsx": __vite_glob_0_5, "./Pages/Admin/Layout/Layout.jsx": __vite_glob_0_6, "./Pages/Admin/Main/Main.jsx": __vite_glob_0_7, "./Pages/Admin/Products/Create/Create.jsx": __vite_glob_0_8, "./Pages/Admin/Products/Edit/Edit.jsx": __vite_glob_0_9, "./Pages/Admin/Products/Index/Index.jsx": __vite_glob_0_10, "./Pages/Client/Index.jsx": __vite_glob_0_11, "./Pages/NotFound.jsx": __vite_glob_0_12, "./Pages/Test.jsx": __vite_glob_0_13 });
+      const pages = /* @__PURE__ */ Object.assign({ "./Pages/Admin/Cards/Create/Create.jsx": __vite_glob_0_0, "./Pages/Admin/Cards/Edit/Edit.jsx": __vite_glob_0_1, "./Pages/Admin/Cards/Index/Index.jsx": __vite_glob_0_2, "./Pages/Admin/Categories/Create/Create.jsx": __vite_glob_0_3, "./Pages/Admin/Categories/Edit/Edit.jsx": __vite_glob_0_4, "./Pages/Admin/Categories/Index/Index.jsx": __vite_glob_0_5, "./Pages/Admin/Layout/Layout.jsx": __vite_glob_0_6, "./Pages/Admin/Main/Main.jsx": __vite_glob_0_7, "./Pages/Admin/Products/Create/Create.jsx": __vite_glob_0_8, "./Pages/Admin/Products/Edit/Edit.jsx": __vite_glob_0_9, "./Pages/Admin/Products/Index/Index.jsx": __vite_glob_0_10, "./Pages/Client/Index/Index.jsx": __vite_glob_0_11, "./Pages/NotFound.jsx": __vite_glob_0_12, "./Pages/Test.jsx": __vite_glob_0_13 });
       return pages[`./Pages/${name}.jsx`];
     },
     setup: ({ App: App2, props }) => /* @__PURE__ */ jsx(App2, { ...props })

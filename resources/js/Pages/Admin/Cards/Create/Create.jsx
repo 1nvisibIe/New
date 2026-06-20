@@ -3,7 +3,6 @@ import Layout from '@/Pages/Admin/Layout/Layout.jsx'
 import {useForm} from '@inertiajs/react'
 import {useState} from 'react'
 import {Link} from '@inertiajs/react'
-import {ChevronRight} from 'lucide-react'
 import FormField from "@/Components/Admin/FormField/FormField.jsx";
 import FormWrapper from "@/Components/Admin/FormWrapper/FormWrapper.jsx";
 
@@ -17,7 +16,7 @@ export default function Create({products}) {
         mainImage: '',
         description: '',
     })
-    const [preview, setPreview] = useState(products.image_url)
+    const [preview, setPreview] = useState('/default.jpg')
     const handleSubmit = (e) => {
         e.preventDefault()
         post('/admin/cards', {forceFormData: true})

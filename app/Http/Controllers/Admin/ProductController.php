@@ -87,6 +87,19 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $products = Product::find($id);
+
+        // Считаем зависимости
+        $cardCount  = $products->card()->count();
+
+        // Если есть зависимости — запрещаем удаление и объясняем почему
+        if ( $cardCount > 0) {
+
+            return redirect()
+                ->route('products.index')
+                ->with('error', "Нельзя удалить товар «{$products->name}». Сначала удалите карточку товара");
+        }
+
+
         $nazvanie = $products->name;
         $products->delete();
         return redirect()->route('products.index')->with('success','Товар '. "$nazvanie" .' удален');

@@ -2,15 +2,15 @@
 import Layout from '@/Pages/Admin/Layout/Layout.jsx'
 import {useForm} from '@inertiajs/react'
 import {Link} from '@inertiajs/react'
-import {ChevronRight} from 'lucide-react'
 import FormWrapper from "@/Components/Admin/FormWrapper/FormWrapper.jsx";
 import FormField from "@/Components/Admin/FormField/FormField.jsx";
-
+import AttributeList from '@/Components/Admin/AttributeList/AttributeList.jsx'
 export default function Create({categories}) {
     const {data, setData, post, processing, errors} = useForm({
 
         name:  '',
-        parent: ''
+        parent: '',
+        attributes: [],
     })
 
     const handleSubmit = (e) => {
@@ -54,6 +54,10 @@ export default function Create({categories}) {
                     </select>
                 </FormField>
 
+                <AttributeList
+                    attributes={data.attributes}
+                    onChange={attrs => setData('attributes', attrs)}
+                />
             </FormWrapper>
 
         </Layout>

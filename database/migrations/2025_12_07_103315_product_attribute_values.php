@@ -15,7 +15,7 @@ return new class extends Migration
 
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('attribute_id');
-            $table->unsignedInteger('attribute_value_id')->nullable();
+            $table->string('value', 170)->nullable();
             $table->unsignedSmallInteger('sort_order')->default(0);
 
             $table->timestamps();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unique(['product_id', 'attribute_id']);
             $table->index('product_id');
             $table->index('attribute_id');
-            $table->index('attribute_value_id');
+
         });
     }
 

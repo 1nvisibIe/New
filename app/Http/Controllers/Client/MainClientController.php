@@ -19,16 +19,19 @@ class MainClientController extends Controller
 
     public function show($slug){
 
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $product = Product::where('slug', $slug)->with(['images' => function ($q) {
+            $q->orderBy('sort_order');
+        }])->firstOrFail();
         $card = $product->card;
+        $card->setRelation('product', $product);
 
-        return view('client.show',compact('card'));
+        return Inertia::render('Client/ShowCard/ShowCard',compact('card'));
     }
 
     public function catalog()
     {
-        $cards = Card::with('product.mainImage')->where('is_active', true)->orderBy('id','desc')->paginate(8);
+        $cards = Card::with('product')->where('is_active', true)->orderBy('id','desc')->paginate(8);
 
-        return Inertia::render('Client/Index',compact('cards'));
+        return Inertia::render('Client/Index/Index',compact('cards'));
     }
 }

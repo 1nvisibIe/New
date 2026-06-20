@@ -1,0 +1,202 @@
+.card-item {
+    width: 210px;
+    height: 100%;
+    margin: 0 auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-item a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-item:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+}
+
+/* Фото */
+.card-image {
+    border-radius: 12px 12px 0 0;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Тело карточки — растягивается, прижимая actions книзу */
+.van-card-body {
+    padding: 6px 0 10px 0;
+    flex: 1;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3;
+    min-height: calc(1.3em * 2);
+}
+
+.card-stock {
+    display: inline-block;
+    font-size: 12px;
+    background: #f0f0f0;
+    color: #555;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+}
+
+/* Цена */
+.card-price {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 5px;
+}
+
+.price-current {
+    font-size: 18px;
+    font-weight: 700;
+    color: #639922;
+}
+
+.price-old {
+    font-size: 14px;
+    color: #aaa;
+    text-decoration: line-through;
+}
+
+/* Кнопки */
+.card-actions {
+    display: flex;
+    gap: 10px;
+    padding: 10px 6px 6px 6px;
+    border-top: 1px solid #f0f0f0;
+    flex-shrink: 0;
+}
+
+/* Кнопка "В корзину" — без бордера, насыщенный зелёный, текст контрастный */
+.btn-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 38px;
+    padding: 0 8px;
+    background: #5A9A2E;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-cart:hover {
+    background: #467A21;
+}
+
+/* Состояние "товар в корзине" — счётчик, ПОСТОЯННЫЙ тёмно-зелёный (не только на hover) */
+.btn-cart--counter {
+    background: #355E18;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    justify-content: space-between;
+    cursor: default;
+}
+
+.cnt-btn {
+    width: 32px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+}
+
+.cnt-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.cnt-num {
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+    flex: 1;
+    text-align: center;
+}
+
+.btn-favorite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 38px;
+    background: #ededed;
+    color: #8a8a8a;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    flex-shrink: 0;
+}
+
+.btn-favorite:active {
+    transform: scale(0.95);
+}
+
+.btn-favorite--active {
+    color: #e24b4a;
+}
+
+@media (max-width: 768px) {
+    .card-item {
+        width: 275px;
+    }
+
+}
+@media (max-width: 576px) {
+    .card-item {
+        width: 210px;
+    }
+
+}
+@media (max-width: 439px) {
+    .card-item {
+        width: 275px;
+    }
+
+}
+
+

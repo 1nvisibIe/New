@@ -19,7 +19,7 @@ main {
 .card-layout {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 колонки на десктопе */
-    gap: 35px;
+    gap: 25px;
     padding: 0;
 }
 
@@ -34,7 +34,7 @@ main {
 @media (max-width: 768px) {
     .card-layout {
         grid-template-columns: repeat(2, 1fr); /* 2 колонки */
-        gap: 25px;
+        gap: 20px;
         padding: 16px;
     }
 }
@@ -42,8 +42,15 @@ main {
 /* Маленький телефон */
 @media (max-width: 576px) {
     .card-layout {
+        grid-template-columns: repeat(2, 1fr); /* 1 колонка */
+        gap: 15px;
+        padding: 12px;
+    }
+}
+@media (max-width: 439px) {
+    .card-layout {
         grid-template-columns: 1fr; /* 1 колонка */
-        gap: 20px;
+        gap: 15px;
         padding: 12px;
     }
 }

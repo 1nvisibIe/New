@@ -8,11 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Attribute extends Model
 {
-    public function attributeValues(): HasMany
-    {
-        return $this->hasMany(AttributeValue::class, 'attribute_id','id')->orderBy('sort_order');
-    }
-
+    protected $fillable = ['name', 'slug', 'type', 'unit', 'is_filterable', 'sort_order'];
     public function products():BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_attribute_values', 'attribute_id', 'product_id');
